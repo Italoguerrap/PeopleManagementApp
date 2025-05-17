@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Container,
   Title,
@@ -13,57 +13,65 @@ import { FilterModal } from '../../components/FilterModal';
 import { AddUserModal } from '../../components/AddUserModal';
 import { FiFilter } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function App() {
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    gender: '',
+    dateOfBirth: '',
+    naturality: '',
+    nationality: '',
+    country: '',
+    cpf: ''
+  });
 
 
-  const users = [
-    {
-      id: 1,    name: 'Liam Smith',    email: 'liam@example.com',    sex: 'Masculino',    birthDate: '15 Mar 1990',    naturality: 'São Paulo',    nationality: 'Brasileiro',    cpf: '123.456.789-00',
-    },
-    {
-      id: 2, name: 'Nathan Anderson', email: 'nathan@example.com', sex: 'Masculino', birthDate: '22 Jan 1988', naturality: 'Fortaleza', nationality: 'Brasileiro', cpf: '321.654.987-11',
-    },
-    {
-      id: 3,    name: 'John Smith',    email: 'john@example.com',    sex: 'Masculino',    birthDate: '05 May 1985',    naturality: 'Rio de Janeiro',    nationality: 'Brasileiro',    cpf: '987.654.321-99',
-    },
-    {
-      id: 4,    name: 'Liam Smith',    email: 'liam@example.com',    sex: 'Masculino',    birthDate: '15 Mar 1990',    naturality: 'São Paulo',    nationality: 'Brasileiro',    cpf: '123.456.789-00',
-    },
-    {
-      id: 5, name: 'Nathan Anderson', email: 'nathan@example.com', sex: 'Masculino', birthDate: '22 Jan 1988', naturality: 'Fortaleza', nationality: 'Brasileiro', cpf: '321.654.987-11',
-    },
-    {
-      id: 6,    name: 'John Smith',    email: 'john@example.com',    sex: 'Masculino',    birthDate: '05 May 1985',    naturality: 'Rio de Janeiro',    nationality: 'Brasileiro',    cpf: '987.654.321-99',
-    },
-    {
-      id: 7,    name: 'Liam Smith',    email: 'liam@example.com',    sex: 'Masculino',    birthDate: '15 Mar 1990',    naturality: 'São Paulo',    nationality: 'Brasileiro',    cpf: '123.456.789-00',
-    },
-    {
-      id: 8, name: 'Nathan Anderson', email: 'nathan@example.com', sex: 'Masculino', birthDate: '22 Jan 1988', naturality: 'Fortaleza', nationality: 'Brasileiro', cpf: '321.654.987-11',
-    },
-    {
-      id: 9,    name: 'John Smith',    email: 'john@example.com',    sex: 'Masculino',    birthDate: '05 May 1985',    naturality: 'Rio de Janeiro',    nationality: 'Brasileiro',    cpf: '987.654.321-99',
-    },
-    {
-      id: 10,    name: 'Liam Smith',    email: 'liam@example.com',    sex: 'Masculino',    birthDate: '15 Mar 1990',    naturality: 'São Paulo',    nationality: 'Brasileiro',    cpf: '123.456.789-00',
-    },
-    {
-      id: 11, name: 'Nathan Anderson', email: 'nathan@example.com', sex: 'Masculino', birthDate: '22 Jan 1988', naturality: 'Fortaleza', nationality: 'Brasileiro', cpf: '321.654.987-11',
-    },
-    {
-      id: 12,    name: 'John Smith',    email: 'john@example.com',    sex: 'Masculino',    birthDate: '05 May 1985',    naturality: 'Rio de Janeiro',    nationality: 'Brasileiro',    cpf: '987.654.321-99',
-    },
-  ];
+  async function getUsers() {
+    const params = new URLSearchParams();
+
+    if (formData.name) params.append("query", formData.name);
+
+    try {
+      const response = await fetch(`http://localhost:5097/api/v1/People?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro ao buscar usuários: ${errorText}`);
+      }
+
+      const data = await response.json();
+      setUsers(data);
+
+      toast.success("Usuários resgatars com sucesso!");
+
+    } catch (err) {
+      console.error(err);
+      toast.error("Erro ao resgatar usuários!");
+    }
+  }
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   return (
     <Container>
 
       <Title>Gerenciamento de Usuários</Title>
       <Description>Gerencie os membros da sua equipe e suas permissões de conta aqui.</Description>
+      <ToastContainer />
       <ControlsContainer>
         <div>
           <Button title="Add User" icon={<FaPlus /> }  colorButton="#02ffff" onClick={() => setIsAddUserModalOpen(true)}/>
@@ -72,10 +80,10 @@ export function App() {
 
       </ControlsContainer>
 
-      <Table users={users} />
+      {users.length > 0 && <Table users={users} />}
 
       {isFilterModalOpen && (<FilterModal onClose={() => setIsFilterModalOpen(false)} />)}
-      {isAddUserModalOpen && (<AddUserModal onClose={() => setIsAddUserModalOpen(false)} />  )}
+      {isAddUserModalOpen && (<AddUserModal onClose={() => setIsAddUserModalOpen(false)} onUserAdded={getUsers} />  )}
     </Container>
     );
 }

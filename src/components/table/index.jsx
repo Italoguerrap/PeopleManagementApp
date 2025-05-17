@@ -3,6 +3,7 @@ import { IoClose } from "react-icons/io5";
 import { FiEdit  } from "react-icons/fi";
 import { EditModal } from '../../components/EditModal';
 import { useState } from 'react'
+import { TfiLayoutLineSolid } from "react-icons/tfi";
 
 export function Table({ users }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -26,6 +27,18 @@ export function Table({ users }) {
     setIsEditModalOpen(true);
   }
 
+  function getGender(gender) {
+    if(gender == 0) {
+      return null;
+    }
+    else  if(gender == 2) {
+      return "Masculino";
+    }
+    else {
+      return "Masculino";
+    }
+  }
+
   return (
     <Container>
       <TableContainer>
@@ -47,12 +60,17 @@ export function Table({ users }) {
             <Tr key={user.id}>
               <Td>{user.id}</Td>
               <Td> <Photo/>{user.name}</Td>
-              <Td>{user.email}</Td>
-              <Td>{user.sex}</Td>
-              <Td>{user.birthDate}</Td>
-              <Td>{user.naturality}</Td>
-              <Td>{user.nationality}</Td>
-              <Td>{user.cpf}</Td>
+              <Td>{user.email || <TfiLayoutLineSolid />}</Td>
+              { console.log( user)}
+              <Td>{ getGender(user.gender) || <TfiLayoutLineSolid />}</Td>
+              <Td>
+                {user.dateOfBirth
+                  ? new Date(user.dateOfBirth).toLocaleDateString('pt-BR')
+                  : <TfiLayoutLineSolid />}
+              </Td>
+              <Td>{user.naturality || <TfiLayoutLineSolid />}</Td>
+              <Td>{user.country || <TfiLayoutLineSolid />}</Td>
+              <Td>{user.cpf || <TfiLayoutLineSolid />}</Td>
               <Td>
                 <StatusBadge>
                   <FiEdit 

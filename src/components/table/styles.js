@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { FaCircleUser } from "react-icons/fa6";
 
-export const Container = styled.table`
+export const Container = styled.div`
   width: 95%;
   align-items: center;
   justify-content: center;

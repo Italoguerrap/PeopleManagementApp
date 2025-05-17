@@ -5,10 +5,10 @@ import { Button } from '../../components/button';
 export function EditModal({ user, onClose }) {
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
-  const [sex, setSex] = useState(user?.sex || '');
-  const [birthDate, setBirthDate] = useState(user?.birthDate || '');
+  const [sex, setSex] = useState(user?.gender || '');
+  const [birthDate, setBirthDate] = useState(user?.dateOfBirth || '');
   const [naturality, setNaturality] = useState(user?.naturality || '');
-  const [nationality, setNationality] = useState(user?.nationality || '');
+  const [nationality, setNationality] = useState(user?.country || '');
   const [cpf, setCpf] = useState(user?.cpf || '');
 
   const [profilePic, setProfilePic] = useState(null);
@@ -17,10 +17,14 @@ export function EditModal({ user, onClose }) {
   useEffect(() => {
     setName(user?.name || '');
     setEmail(user?.email || '');
-    setSex(user?.sex || '');
-    setBirthDate(user?.birthDate || '');
+    setSex(user?.gender === 0 ? "Masculino" : user?.gender === 1 ? "Feminino" : '');
+      if(user?.dateOfBirth) {
+    setBirthDate(user.dateOfBirth.slice(0, 10));
+  } else {
+    setBirthDate('');
+  }
     setNaturality(user?.naturality || '');
-    setNationality(user?.nationality || '');
+    setNationality(user?.country || '');
     setCpf(user?.cpf || '');
     setProfilePic(null);
     setPreview(null);
