@@ -1,17 +1,17 @@
 // Responsivity context to provide device information throughout the app
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 // Create context for device type information
 const ResponsiveContext = createContext({
   isMobile: false,
   isTablet: false,
-  isLandscape: false
+  isLandscape: false,
 });
 
 // Breakpoints matching our responsive.js file
 const BREAKPOINTS = {
   mobile: 425,
-  tablet: 768
+  tablet: 768,
 };
 
 export const ResponsiveProvider = ({ children }) => {
@@ -19,7 +19,7 @@ export const ResponsiveProvider = ({ children }) => {
   const [state, setState] = useState({
     isMobile: false,
     isTablet: false,
-    isLandscape: window.innerWidth > window.innerHeight
+    isLandscape: window.innerWidth > window.innerHeight,
   });
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const ResponsiveProvider = ({ children }) => {
       setState({
         isMobile: width <= BREAKPOINTS.mobile,
         isTablet: width > BREAKPOINTS.mobile && width <= BREAKPOINTS.tablet,
-        isLandscape: window.innerWidth > window.innerHeight
+        isLandscape: window.innerWidth > window.innerHeight,
       });
     };
 
@@ -37,13 +37,13 @@ export const ResponsiveProvider = ({ children }) => {
     updateDimensions();
 
     // Add resize listener
-    window.addEventListener('resize', updateDimensions);
-    window.addEventListener('orientationchange', updateDimensions);
+    window.addEventListener("resize", updateDimensions);
+    window.addEventListener("orientationchange", updateDimensions);
 
     // Cleanup
     return () => {
-      window.removeEventListener('resize', updateDimensions);
-      window.removeEventListener('orientationchange', updateDimensions);
+      window.removeEventListener("resize", updateDimensions);
+      window.removeEventListener("orientationchange", updateDimensions);
     };
   }, []);
 

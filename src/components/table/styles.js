@@ -25,11 +25,11 @@ export const Container = styled.div`
   padding: 1rem;
   overflow-x: auto;
   animation: ${fadeIn} 0.5s ease;
-  
+
   @media ${device.tablet} {
     padding: 0.5rem;
   }
-  
+
   @media ${device.mobileL} {
     padding: 0.25rem;
     -webkit-overflow-scrolling: touch; /* Improve scroll on iOS */
@@ -48,16 +48,16 @@ export const TableContainer = styled.table`
   transition: box-shadow 0.3s ease;
   animation: ${slideDown} 0.5s ease;
   position: relative;
-  
+
   &:hover {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   }
-  
+
   @media ${device.tablet} {
     font-size: 0.9rem;
     border-radius: 8px;
   }
-  
+
   @media ${device.mobileL} {
     font-size: 0.8rem;
     margin-top: 0.5rem;
@@ -85,14 +85,16 @@ export const Tr = styled.tr`
   transition: all 0.3s ease;
   animation: ${fadeIn} 0.5s ease;
   animation-fill-mode: both;
-  animation-delay: ${props => props.$index * 0.05}s;
+  animation-delay: ${(props) => props.$index * 0.05}s;
 
   &:hover {
-    background-color: ${props => props.$isHeader ? 'transparent' : '#f5f9ff'};
-    transform: ${props => props.$isHeader ? 'none' : 'translateY(-2px)'};
-    box-shadow: ${props => props.$isHeader ? 'none' : '0 4px 6px rgba(0, 0, 0, 0.05)'};
+    background-color: ${(props) =>
+      props.$isHeader ? "transparent" : "#f5f9ff"};
+    transform: ${(props) => (props.$isHeader ? "none" : "translateY(-2px)")};
+    box-shadow: ${(props) =>
+      props.$isHeader ? "none" : "0 4px 6px rgba(0, 0, 0, 0.05)"};
   }
-  
+
   &:last-child {
     border-bottom: none;
   }
@@ -103,7 +105,7 @@ export const HeaderTr = styled.tr`
   background: linear-gradient(90deg, #02ffff, #0088ff);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
-  
+
   &:hover {
     background: linear-gradient(90deg, #02ffff, #0088ff);
   }
@@ -118,12 +120,12 @@ export const Th = styled.th`
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  
+
   @media ${device.tablet} {
     padding: 0.8rem 1rem;
     font-size: 0.85rem;
   }
-  
+
   @media ${device.mobileL} {
     padding: 0.6rem 0.75rem;
     font-size: 0.75rem;
@@ -134,12 +136,12 @@ export const Th = styled.th`
 export const Td = styled.td`
   padding: 1rem 1.2rem;
   font-size: 0.95rem;
-  
+
   @media ${device.tablet} {
     padding: 0.8rem 1rem;
     font-size: 0.85rem;
   }
-  
+
   @media ${device.mobileL} {
     padding: 0.6rem 0.75rem;
     font-size: 0.75rem;
@@ -152,7 +154,7 @@ export const Td = styled.td`
     vertical-align: middle;
     transition: all 0.3s ease;
     color: #ccc;
-    
+
     &:hover {
       transform: scale(1.15);
     }
@@ -177,12 +179,12 @@ export const StatusBadge = styled.span`
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     &:hover {
       color: #0066cc;
       transform: scale(1.2);
     }
-    
+
     @media ${device.mobileL} {
       font-size: 1.6rem;
       min-width: 34px;
@@ -199,7 +201,7 @@ export const StatusBadge = styled.span`
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     @media ${device.mobileL} {
       font-size: 1.6rem;
       min-width: 34px;
@@ -208,13 +210,13 @@ export const StatusBadge = styled.span`
     }
     cursor: pointer;
     transition: all 0.2s ease;
-    
+
     &:hover {
       color: #cc0000;
       transform: scale(1.2) rotate(90deg);
     }
   }
-  
+
   @media ${device.mobileL} {
     gap: 1.2rem;
   }
@@ -236,13 +238,13 @@ export const PaginationFooter = styled.div`
   padding: 1rem 0;
   margin-top: 1rem;
   animation: ${fadeIn} 0.7s ease;
-  
+
   @media ${device.tablet} {
     flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
   }
-  
+
   @media ${device.mobileL} {
     flex-direction: column;
     gap: 15px;
@@ -250,7 +252,7 @@ export const PaginationFooter = styled.div`
     padding-top: 1.5rem;
     border-top: 1px solid #eee;
   }
-  
+
   select {
     padding: 0.5rem;
     border-radius: 8px;
@@ -260,17 +262,17 @@ export const PaginationFooter = styled.div`
     font-size: 0.9rem;
     transition: all 0.2s;
     cursor: pointer;
-    
+
     &:focus {
       outline: none;
       border-color: #0088ff;
       box-shadow: 0 0 0 3px rgba(0, 136, 255, 0.2);
     }
-    
+
     &:hover {
       border-color: #0088ff;
     }
-    
+
     @media ${device.mobileL} {
       font-size: 0.8rem;
       padding: 0.7rem;
@@ -280,27 +282,33 @@ export const PaginationFooter = styled.div`
   }
 `;
 
-export const PaginationButton = styled.button`  padding: 8px 14px;
+export const PaginationButton = styled.button`
+  padding: 8px 14px;
   border: 1px solid #ddd;
-  background-color: ${props => props.$active ? 'linear-gradient(90deg, #02ffff, #0088ff)' : '#fff'};
-  background: ${props => props.$active ? 'linear-gradient(90deg, #02ffff, #0088ff)' : '#fff'};
-  color: ${props => props.$active ? '#fff' : '#555'};
+  background-color: ${(props) =>
+    props.$active ? "linear-gradient(90deg, #02ffff, #0088ff)" : "#fff"};
+  background: ${(props) =>
+    props.$active ? "linear-gradient(90deg, #02ffff, #0088ff)" : "#fff"};
+  color: ${(props) => (props.$active ? "#fff" : "#555")};
   border-radius: 8px;
   cursor: pointer;
   margin: 0 3px;
-  font-weight: ${props => props.$active ? '600' : '400'};
+  font-weight: ${(props) => (props.$active ? "600" : "400")};
   transition: all 0.2s ease;
-  box-shadow: ${props => props.$active ? '0 4px 8px rgba(0, 136, 255, 0.3)' : '0 2px 4px rgba(0, 0, 0, 0.05)'};
+  box-shadow: ${(props) =>
+    props.$active
+      ? "0 4px 8px rgba(0, 136, 255, 0.3)"
+      : "0 2px 4px rgba(0, 0, 0, 0.05)"};
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 136, 255, 0.2);
     border-color: #0088ff;
   }
-  
+
   &:active {
     transform: translateY(0);
   }
-  
+
   @media ${device.mobileL} {
     padding: 8px 12px;
     font-size: 0.9rem;

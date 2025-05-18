@@ -1,7 +1,7 @@
-import React from 'react';
-import styled, { keyframes } from 'styled-components';
-import { FiLoader } from 'react-icons/fi';
-import { device } from '../../styles/responsive';
+import React from "react";
+import styled, { keyframes } from "styled-components";
+import { FiLoader } from "react-icons/fi";
+import { device } from "../../styles/responsive";
 
 const fadeIn = keyframes`
   from { opacity: 0; }
@@ -34,13 +34,13 @@ const Container = styled.div`
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   animation: ${fadeIn} 0.3s ease-in;
   transition: all 0.3s ease;
-  
+
   @media ${device.tablet} {
     padding: 3rem 1.5rem;
     margin: 2rem auto;
     min-height: 300px;
   }
-  
+
   @media ${device.mobileL} {
     padding: 2rem 1rem;
     margin: 1rem auto;
@@ -55,12 +55,12 @@ const IconContainer = styled.div`
   margin-bottom: 2rem;
   animation: ${spin} 1.5s linear infinite;
   filter: drop-shadow(0 0 10px rgba(2, 255, 255, 0.5));
-  
+
   @media ${device.tablet} {
     font-size: 3.5rem;
     margin-bottom: 1.5rem;
   }
-  
+
   @media ${device.mobileL} {
     font-size: 2.5rem;
     margin-bottom: 1rem;
@@ -73,11 +73,11 @@ const Message = styled.p`
   margin-bottom: 1rem;
   font-weight: 500;
   animation: ${pulse} 2s ease-in-out infinite;
-  
+
   @media ${device.tablet} {
     font-size: 1.2rem;
   }
-  
+
   @media ${device.mobileL} {
     font-size: 1rem;
   }
@@ -88,7 +88,7 @@ const Subtitle = styled.p`
   color: #888;
   max-width: 350px;
   line-height: 1.5;
-  
+
   @media ${device.mobileL} {
     font-size: 0.9rem;
     max-width: 90%;
@@ -115,37 +115,40 @@ const RetryButton = styled.button`
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  
+
   @media ${device.mobileL} {
     padding: 0.7rem 1.2rem;
     font-size: 0.9rem;
     margin-top: 1rem;
   }
-  
+
   &:hover {
     background-color: #00d8d8;
     transform: translateY(-2px);
     box-shadow: 0 5px 10px rgba(2, 255, 255, 0.3);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
 `;
 
-export function LoadingState({ message = "Carregando usuários...", subtitle = "Por favor, aguarde enquanto buscamos as informações.", isError = false, onRetry = null }) {
+export function LoadingState({
+  message = "Carregando usuários...",
+  subtitle = "Por favor, aguarde enquanto buscamos as informações.",
+  isError = false,
+  onRetry = null,
+}) {
   if (isError) {
     return (
       <ErrorContainer>
-        <IconContainer style={{ color: '#e74c3c', animation: 'none' }}>
+        <IconContainer style={{ color: "#e74c3c", animation: "none" }}>
           <FiLoader />
         </IconContainer>
         <ErrorMessage>{message}</ErrorMessage>
         <Subtitle>{subtitle}</Subtitle>
         {onRetry && (
-          <RetryButton onClick={onRetry}>
-            Tentar novamente
-          </RetryButton>
+          <RetryButton onClick={onRetry}>Tentar novamente</RetryButton>
         )}
       </ErrorContainer>
     );

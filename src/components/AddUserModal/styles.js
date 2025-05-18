@@ -1,5 +1,5 @@
-import styled, { keyframes } from 'styled-components';
-import { device } from '../../styles/responsive';
+import styled, { keyframes } from "styled-components";
+import { device } from "../../styles/responsive";
 
 const fadeIn = keyframes`
   from { opacity: 0; }
@@ -68,7 +68,7 @@ export const ModalOverlay = styled.div`
   z-index: 1000;
   animation: ${fadeIn} 0.3s ease;
   padding: 1rem;
-  
+
   @media ${device.mobileL} {
     padding: 0.5rem;
     align-items: flex-start;
@@ -89,7 +89,7 @@ export const ModalContent = styled.div`
   animation: ${slideUp} 0.3s ease;
   position: relative;
   overflow-y: auto;
-  
+
   @media ${device.tablet} {
     padding: 1.5rem;
     width: 90%;
@@ -97,7 +97,7 @@ export const ModalContent = styled.div`
     overflow-y: auto;
     font-size: 0.95rem;
   }
-  
+
   @media ${device.mobileL} {
     padding: 1rem;
     width: 95%;
@@ -105,7 +105,7 @@ export const ModalContent = styled.div`
     font-size: 0.9rem;
     border-radius: 10px;
   }
-  
+
   h2 {
     margin-top: 0;
     color: #333;
@@ -113,26 +113,26 @@ export const ModalContent = styled.div`
     margin-bottom: 1.5rem;
     text-align: center;
     position: relative;
-    
+
     @media ${device.tablet} {
       font-size: 1.5rem;
       margin-bottom: 1rem;
     }
-    
+
     @media ${device.mobileL} {
       font-size: 1.3rem;
       margin-bottom: 0.8rem;
     }
-    
+
     &:after {
-      content: '';
+      content: "";
       display: block;
       width: 60px;
       height: 4px;
       background: linear-gradient(90deg, #02ffff, #0088ff);
       border-radius: 2px;
       margin: 0.8rem auto 0;
-      
+
       @media ${device.mobileL} {
         width: 40px;
         height: 3px;
@@ -145,18 +145,18 @@ export const ModalContent = styled.div`
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   label {
     font-size: 0.95rem;
     font-weight: 500;
     color: #555;
     margin-bottom: 0.3rem;
-    
+
     @media ${device.mobileL} {
       font-size: 0.85rem;
     }
   }
-  
+
   input {
     width: 93%;
     padding: 0.8rem;
@@ -164,25 +164,25 @@ export const ModalContent = styled.div`
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.2s;
-    
+
     @media ${device.tablet} {
       width: 95%;
       padding: 0.7rem;
     }
-    
+
     @media ${device.mobileL} {
       width: 100%;
       padding: 0.7rem;
       font-size: 16px; /* Prevents zooming on iOS */
       border-radius: 8px;
     }
-    
+
     &:focus {
       outline: none;
       border-color: #0088ff;
       box-shadow: 0 0 0 3px rgba(0, 136, 255, 0.2);
     }
-    
+
     &::placeholder {
       color: #aaa;
     }
@@ -191,7 +191,7 @@ export const ModalContent = styled.div`
   input[type="file"] {
     padding: 0.5rem;
     font-size: 0.9rem;
-    
+
     @media ${device.mobileL} {
       font-size: 14px;
       padding: 0.5rem 0;
@@ -211,16 +211,16 @@ export const ModalContent = styled.div`
     background-size: 16px;
     cursor: pointer;
     transition: all 0.2s;
-    
+
     @media ${device.tablet} {
       padding: 0.7rem;
     }
-    
+
     @media ${device.mobileL} {
       padding: 0.7rem;
       font-size: 16px; /* Prevents zooming on iOS */
     }
-    
+
     &:focus {
       outline: none;
       border-color: #0088ff;
@@ -229,16 +229,17 @@ export const ModalContent = styled.div`
   }
   .form-group {
     margin-bottom: 0.8rem;
-    
+
     label {
       display: block;
       margin-bottom: 0.5rem;
     }
-    
-    input, select {
+
+    input,
+    select {
       margin-top: 0.2rem;
     }
-    
+
     .error-message {
       color: #ff3333;
       font-size: 0.85rem;
@@ -246,21 +247,22 @@ export const ModalContent = styled.div`
       font-weight: 500;
       display: flex;
       align-items: center;
-      
+
       @media ${device.mobileL} {
         font-size: 0.75rem;
       }
-      
+
       svg {
         margin-right: 0.3rem;
         flex-shrink: 0;
       }
     }
-    
-    input.has-error, select.has-error {
+
+    input.has-error,
+    select.has-error {
       border-color: #ff3333;
       background-color: rgba(255, 51, 51, 0.05);
-      
+
       &:focus {
         border-color: #ff3333;
         box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.2);
@@ -273,11 +275,11 @@ export const Photo = styled.div`
   display: flex;
   justify-content: center;
   margin: 1rem 0;
-  
+
   @media ${device.mobileL} {
     margin: 0.5rem 0;
   }
-  
+
   img {
     width: 120px;
     height: 120px;
@@ -286,17 +288,17 @@ export const Photo = styled.div`
     border: 3px solid #0088ff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    
+
     @media ${device.tablet} {
       width: 100px;
       height: 100px;
     }
-    
+
     @media ${device.mobileL} {
       width: 80px;
       height: 80px;
     }
-    
+
     &:hover {
       transform: scale(1.05);
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
@@ -306,24 +308,24 @@ export const Photo = styled.div`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   width: 100%;
   margin-top: 1.5rem;
 
   & button {
     margin: 0.5rem;
-    width: 100%;   
+    width: 100%;
   }
-  
+
   @media ${device.tablet} {
     margin-top: 1.2rem;
   }
-  
+
   @media ${device.mobileL} {
     flex-direction: column-reverse; /* Cancel button at bottom, submit at top */
     gap: 12px;
     margin-top: 1rem;
-    
+
     & button {
       margin: 0;
       height: auto;

@@ -1,9 +1,9 @@
-import React from 'react';
-import styled, { keyframes } from 'styled-components';
-import { FaUserPlus } from 'react-icons/fa';
-import { AddUserButton } from '../AddUserButton';
-import { ToastManager } from '../ToastManager';
-import { device } from '../../styles/responsive';
+import React from "react";
+import styled, { keyframes } from "styled-components";
+import { FaUserPlus } from "react-icons/fa";
+import { AddUserButton } from "../AddUserButton";
+import { ToastManager } from "../ToastManager";
+import { device } from "../../styles/responsive";
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -47,20 +47,20 @@ const Container = styled.div`
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   animation: ${fadeIn} 0.6s ease-out;
-  
+
   @media ${device.tablet} {
     padding: 3rem 1.5rem;
     margin: 2rem auto;
     min-height: 300px;
   }
-  
+
   @media ${device.mobileL} {
     padding: 2rem 1rem;
     margin: 1rem auto;
     min-height: 250px;
     width: 95%;
   }
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
@@ -72,14 +72,16 @@ const IconContainer = styled.div`
   font-size: 5rem;
   color: #02ffff;
   margin-bottom: 2rem;
-  animation: ${pulse} 2s infinite, ${floatAnimation} 4s ease-in-out infinite;
+  animation:
+    ${pulse} 2s infinite,
+    ${floatAnimation} 4s ease-in-out infinite;
   filter: drop-shadow(0 5px 15px rgba(2, 255, 255, 0.4));
-  
+
   @media ${device.tablet} {
     font-size: 4rem;
     margin-bottom: 1.5rem;
   }
-  
+
   @media ${device.mobileL} {
     font-size: 3rem;
     margin-bottom: 1rem;
@@ -94,11 +96,11 @@ const Title = styled.h3`
   animation: ${fadeIn} 0.6s ease-out;
   animation-delay: 0.2s;
   animation-fill-mode: both;
-  
+
   @media ${device.tablet} {
     font-size: 1.7rem;
   }
-  
+
   @media ${device.mobileL} {
     font-size: 1.4rem;
     margin-bottom: 0.75rem;
@@ -114,12 +116,12 @@ const Description = styled.p`
   animation: ${fadeIn} 0.6s ease-out;
   animation-delay: 0.4s;
   animation-fill-mode: both;
-  
+
   @media ${device.tablet} {
     font-size: 1rem;
     margin-bottom: 2rem;
   }
-  
+
   @media ${device.mobileL} {
     font-size: 0.9rem;
     margin-bottom: 1.5rem;
@@ -142,8 +144,8 @@ export function EmptyState({ onAddClick }) {
       </IconContainer>
       <Title>Bem-vindo ao Gerenciamento de Usuários</Title>
       <Description>
-        Você ainda não possui usuários cadastrados no sistema.
-        Para começar, clique no botão abaixo.
+        Você ainda não possui usuários cadastrados no sistema. Para começar,
+        clique no botão abaixo.
       </Description>
       <ButtonContainer>
         <AddUserButton onClick={onAddClick} />

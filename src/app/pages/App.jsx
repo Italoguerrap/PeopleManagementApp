@@ -1,24 +1,23 @@
-import { useState, useEffect } from 'react'
-import { 
-  Container,
-  Title,
-  Description,
-  ControlsContainer
-} from './styles';
-import { Button } from '../../components/button';
+import { useState, useEffect } from "react";
+import { Container, Title, Description, ControlsContainer } from "./styles";
+import { Button } from "../../components/button";
 import { FaCircleUser } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
-import { Table } from '../../components/table';
-import { FilterModal } from '../../components/FilterModal'; 
-import { AddUserModal } from '../../components/AddUserModal';
-import { EmptyState } from '../../components/EmptyState';
-import { NoResultsState } from '../../components/NoResultsState';
-import { LoadingState } from '../../components/LoadingState';
-import { ToastManager, showToast, ToastType } from '../../components/ToastManager';
+import { Table } from "../../components/table";
+import { FilterModal } from "../../components/FilterModal";
+import { AddUserModal } from "../../components/AddUserModal";
+import { EmptyState } from "../../components/EmptyState";
+import { NoResultsState } from "../../components/NoResultsState";
+import { LoadingState } from "../../components/LoadingState";
+import {
+  ToastManager,
+  showToast,
+  ToastType,
+} from "../../components/ToastManager";
 import { FiFilter } from "react-icons/fi";
 import { MdClear } from "react-icons/md";
-import { AddUserButton } from '../../components/AddUserButton';
-import { searchPeople } from '../../services/api';
+import { AddUserButton } from "../../components/AddUserButton";
+import { searchPeople } from "../../services/api";
 
 export function App() {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -28,71 +27,67 @@ export function App() {
   const [isFiltered, setIsFiltered] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    gender: '',
-    dateOfBirth: '',
-    naturality: '',
-    nationality: '',
-    country: '',
-    cpf: ''
+    name: "",
+    email: "",
+    gender: "",
+    dateOfBirth: "",
+    naturality: "",
+    nationality: "",
+    cpf: "",
   });
-  
+
   async function getUsers() {
     try {
       setLoading(true);
       setLoadError(false);
-      
-      const query = formData.name || '';
+
+      const query = formData.name || "";
       const data = await searchPeople(query);
-      
+
       setUsers(data);
       setIsFiltered(!!query);
-      
+
       if (users.length > 0) {
         showToast("Usuários carregados com sucesso!", ToastType.SUCCESS);
       }
     } catch (err) {
       console.error(err);
-      
+
       setLoadError(true);
-    
+
       if (users.length > 0 && err.message !== "Failed to fetch") {
         showToast("Erro ao resgatar usuários: " + err.message, ToastType.ERROR);
       }
-      
     } finally {
       setLoading(false);
     }
   }
-  
+
   async function clearAllFilters() {
     setFormData({
-      name: '',
-      email: '',
-      gender: '',
-      dateOfBirth: '',
-      naturality: '',
-      nationality: '',
-      country: '',
-      cpf: ''
+      name: "",
+      email: "",
+      gender: "",
+      dateOfBirth: "",
+      naturality: "",
+      nationality: "",
+      cpf: "",
     });
     setIsFiltered(false);
     try {
       setLoading(true);
       setLoadError(false);
-      
-      const data = await searchPeople('');
+
+      const data = await searchPeople("");
       setUsers(data);
     } catch (err) {
       console.error(err);
-      
+
       setLoadError(true);
-      
+
       if (err.message !== "Failed to fetch") {
         showToast("Erro ao resgatar usuários: " + err.message, ToastType.ERROR);
       }
-      
     } finally {
       setLoading(false);
     }
@@ -100,13 +95,13 @@ export function App() {
 
   useEffect(() => {
     let reconnectTimer;
-    
+
     if (loadError) {
       reconnectTimer = setTimeout(() => {
         getUsers();
       }, 5000);
     }
-    
+
     return () => {
       if (reconnectTimer) {
         clearTimeout(reconnectTimer);
@@ -116,13 +111,22 @@ export function App() {
 
   useEffect(() => {
     getUsers();
-  }, []);  return (
+  }, []);
+  return (
     <Container>
       {}
       {loading || loadError ? (
-        <LoadingState 
-          message={loadError ? "Erro ao conectar com o servidor" : "Carregando usuários..."}
-          subtitle={loadError ? "Tentando reconectar automaticamente..." : "Por favor, aguarde enquanto buscamos as informações."}
+        <LoadingState
+          message={
+            loadError
+              ? "Erro ao conectar com o servidor"
+              : "Carregando usuários..."
+          }
+          subtitle={
+            loadError
+              ? "Tentando reconectar automaticamente..."
+              : "Por favor, aguarde enquanto buscamos as informações."
+          }
           isError={loadError}
           onRetry={() => getUsers()}
         />
@@ -131,54 +135,56 @@ export function App() {
       ) : (
         <>
           <Title>Gerenciamento de Usuários</Title>
-          <Description>Gerencie os membros da sua equipe e suas permissões de conta aqui.</Description>          <ToastManager />
-          
+          <Description>
+            Gerencie os membros da sua equipe e suas permissões de conta aqui.
+          </Description>{" "}
+          <ToastManager />
           <ControlsContainer>
             <div>
-              <AddUserButton 
-                onClick={() => setIsAddUserModalOpen(true)}
-              />
-              <Button 
-                title={isFiltered ? "Editar Filtros" : "Adicionar Filtros"} 
-                icon={<FiFilter />}  
-                colorButton="#02ffff" 
-                onClick={() => setIsFilterModalOpen(true)} 
+              <AddUserButton onClick={() => setIsAddUserModalOpen(true)} />
+              <Button
+                title={isFiltered ? "Editar Filtros" : "Adicionar Filtros"}
+                icon={<FiFilter />}
+                colorButton="#02ffff"
+                onClick={() => setIsFilterModalOpen(true)}
               />
               {isFiltered && (
                 <span className="filter-badge">
                   Filtros Ativos
-                  <MdClear 
-                    className="clear-icon" 
-                    onClick={clearAllFilters} 
+                  <MdClear
+                    className="clear-icon"
+                    onClick={clearAllFilters}
                     title="Limpar filtros"
-                    style={{ marginLeft: '5px', cursor: 'pointer' }}
+                    style={{ marginLeft: "5px", cursor: "pointer" }}
                   />
                 </span>
               )}
             </div>
           </ControlsContainer>
-          
           {/* Conteúdo da tabela */}
           {users.length > 0 ? (
-            <Table 
-              users={users} 
-              onLastUserDeleted={() => {            
+            <Table
+              users={users}
+              onLastUserDeleted={() => {
                 setUsers([]);
                 setIsFiltered(false);
-                showToast("Todos os usuários foram removidos!", ToastType.SUCCESS);
+                showToast(
+                  "Todos os usuários foram removidos!",
+                  ToastType.SUCCESS,
+                );
               }}
             />
           ) : (
-            <NoResultsState 
-              onClearFilter={clearAllFilters} 
-              onShowFilter={() => setIsFilterModalOpen(true)} 
+            <NoResultsState
+              onClearFilter={clearAllFilters}
+              onShowFilter={() => setIsFilterModalOpen(true)}
             />
           )}
         </>
       )}
       {isFilterModalOpen && (
-        <FilterModal 
-          onClose={() => setIsFilterModalOpen(false)} 
+        <FilterModal
+          onClose={() => setIsFilterModalOpen(false)}
           onFilterApplied={(filteredResults) => {
             setUsers(filteredResults);
             setIsFiltered(true);
@@ -186,11 +192,11 @@ export function App() {
         />
       )}
       {isAddUserModalOpen && (
-        <AddUserModal 
-          onClose={() => setIsAddUserModalOpen(false)} 
-          onUserAdded={getUsers} 
+        <AddUserModal
+          onClose={() => setIsAddUserModalOpen(false)}
+          onUserAdded={getUsers}
         />
       )}
     </Container>
-    );
+  );
 }

@@ -1,6 +1,24 @@
-import { Container,TableContainer, PaginationFooter, Thead, Tbody, Tr, HeaderTr, Th, Td, StatusBadge, Photo, PaginationButton } from "./styles";
+import {
+  Container,
+  TableContainer,
+  PaginationFooter,
+  Thead,
+  Tbody,
+  Tr,
+  HeaderTr,
+  Th,
+  Td,
+  StatusBadge,
+  Photo,
+  PaginationButton,
+} from "./styles";
 import { IoClose } from "react-icons/io5";
-import { FiEdit, FiChevronLeft, FiChevronRight, FiArrowRight } from "react-icons/fi";
+import {
+  FiEdit,
+  FiChevronLeft,
+  FiChevronRight,
+  FiArrowRight,
+} from "react-icons/fi";
 import { EditModal } from "../../components/EditModal";
 import { DeleteConfirmationModal } from "../../components/DeleteConfirmationModal";
 import { useState, useEffect } from "react";
@@ -28,9 +46,10 @@ export function Table({ users, onLastUserDeleted }) {
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = usersData.length > 0
-    ? usersData.slice(indexOfFirstUser, indexOfLastUser)
-    : users.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUsers =
+    usersData.length > 0
+      ? usersData.slice(indexOfFirstUser, indexOfLastUser)
+      : users.slice(indexOfFirstUser, indexOfLastUser);
 
   function handleEditClick(user) {
     setSelectedUser(user);
@@ -43,7 +62,9 @@ export function Table({ users, onLastUserDeleted }) {
   }
 
   function handleUserDeleted() {
-    const updatedUsers = usersData.filter(user => user.id !== selectedUser.id);
+    const updatedUsers = usersData.filter(
+      (user) => user.cpf !== selectedUser.cpf,
+    );
     setUsersData(updatedUsers);
 
     const maxPage = Math.ceil(updatedUsers.length / usersPerPage);
@@ -65,7 +86,6 @@ export function Table({ users, onLastUserDeleted }) {
         <TableContainer className="responsive-table responsive-columns">
           <Thead>
             <HeaderTr>
-              <Th className="priority-low">#</Th>
               <Th>Nome</Th>
               <Th>Email</Th>
               <Th className="priority-medium">Sexo</Th>
@@ -78,18 +98,34 @@ export function Table({ users, onLastUserDeleted }) {
           </Thead>
           <Tbody>
             {currentUsers.map((user, index) => (
-              <Tr key={user.id} $index={index}>
-                <Td className="priority-low" data-label="#">{user.id}</Td>
-                <Td data-label="Nome"><Photo />{user.name}</Td>
-                <Td data-label="Email">{user.email || <TfiLayoutLineSolid />}</Td>
-                <Td className="priority-medium" data-label="Sexo">{getGenderText(user.gender) || <TfiLayoutLineSolid />}</Td>
-                <Td className="priority-medium" data-label="Data de Nascimento">
-                  {user.dateOfBirth
-                    ? new Date(user.dateOfBirth).toLocaleDateString("pt-BR")
-                    : <TfiLayoutLineSolid />}
+              <Tr key={user.cpf} $index={index}>
+                <Td data-label="Nome">
+                  <Photo />
+                  {user.name}
                 </Td>
-                <Td className="priority-low" data-label="Naturalidade">{user.naturality || <TfiLayoutLineSolid />}</Td>
-                <Td className="priority-low" data-label="Nacionalidade">{user.country || <TfiLayoutLineSolid />}</Td>
+                <Td data-label="Email">
+                  {user.email || <TfiLayoutLineSolid />}
+                </Td>
+                <Td className="priority-medium" data-label="Sexo">
+                  {user.gender === 0 || user.gender === "other" ? (
+                    <TfiLayoutLineSolid />
+                  ) : (
+                    getGenderText(user.gender) || <TfiLayoutLineSolid />
+                  )}
+                </Td>{" "}
+                <Td className="priority-medium" data-label="Data de Nascimento">
+                  {user.dateOfBirth ? (
+                    new Date(user.dateOfBirth).toLocaleDateString("pt-BR")
+                  ) : (
+                    <TfiLayoutLineSolid />
+                  )}
+                </Td>
+                <Td className="priority-low" data-label="Naturalidade">
+                  {user.naturality || <TfiLayoutLineSolid />}
+                </Td>
+                <Td className="priority-low" data-label="Nacionalidade">
+                  {user.nationality || <TfiLayoutLineSolid />}
+                </Td>
                 <Td data-label="CPF">{user.cpf || <TfiLayoutLineSolid />}</Td>
                 <Td data-label="Ações">
                   <StatusBadge>
@@ -124,7 +160,10 @@ export function Table({ users, onLastUserDeleted }) {
             <option value={50}>50</option>
           </select>
         </div>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }} className="pagination-controls">
+        <div
+          style={{ display: "flex", gap: 8, alignItems: "center" }}
+          className="pagination-controls"
+        >
           {currentPage > 1 && (
             <PaginationButton onClick={() => setCurrentPage(currentPage - 1)}>
               <FiChevronLeft />
@@ -133,7 +172,7 @@ export function Table({ users, onLastUserDeleted }) {
 
           {Array.from(
             { length: Math.ceil(usersData.length / usersPerPage) },
-            (_, i) => i + 1
+            (_, i) => i + 1,
           ).map((pageNumber) => (
             <PaginationButton
               key={pageNumber}
@@ -159,8 +198,8 @@ export function Table({ users, onLastUserDeleted }) {
           onUserUpdated={(updatedUser) => {
             setIsEditModalOpen(false);
             if (updatedUser) {
-              const updatedUsers = usersData.map(user =>
-                user.id === updatedUser.id ? updatedUser : user
+              const updatedUsers = usersData.map((user) =>
+                user.cpf === updatedUser.cpf ? updatedUser : user,
               );
               setUsersData(updatedUsers);
               toast.success("Lista de usuários atualizada com sucesso!");

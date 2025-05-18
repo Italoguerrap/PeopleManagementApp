@@ -1,8 +1,8 @@
 // Este arquivo contém instruções de responsividade para tabelas
 // Pode ser usado para modificar o comportamento de tabelas em dispositivos móveis
 
-import { css } from 'styled-components';
-import { device } from './responsive';
+import { css } from "styled-components";
+import { device } from "./responsive";
 
 // Estilos para tornar tabelas mais responsivas em dispositivos móveis
 export const responsiveTableStyles = css`
@@ -15,7 +15,7 @@ export const responsiveTableStyles = css`
       -webkit-overflow-scrolling: touch;
       -ms-overflow-style: -ms-autohiding-scrollbar; /* Para IE11 */
     }
-    
+
     /* Indicador de rolagem horizontal */
     .table-scroll-indicator {
       display: block;
@@ -28,10 +28,15 @@ export const responsiveTableStyles = css`
       border-radius: 20px;
       animation: fadeInOut 3s infinite;
     }
-    
+
     @keyframes fadeInOut {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; }
+      0%,
+      100% {
+        opacity: 0.7;
+      }
+      50% {
+        opacity: 1;
+      }
     }
   }
 `;
@@ -44,7 +49,7 @@ export const tableToCards = css`
       thead {
         display: none;
       }
-      
+
       tr {
         display: block;
         margin-bottom: 1rem;
@@ -53,25 +58,28 @@ export const tableToCards = css`
         padding: 0.5rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         background-color: #fff;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        
-        &:hover, &:active {
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+
+        &:hover,
+        &:active {
           transform: translateY(-2px);
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
       }
-      
+
       td {
         display: block;
         text-align: right;
         padding: 0.8rem 0.5rem;
         position: relative;
         border-bottom: 1px solid #eee;
-        
+
         &:last-child {
           border-bottom: none;
         }
-        
+
         &:before {
           content: attr(data-label);
           float: left;
@@ -81,14 +89,14 @@ export const tableToCards = css`
           color: #666;
           padding-right: 10px;
         }
-        
+
         /* Melhorar legibilidade dos valores */
         &[data-value] {
           font-weight: 500;
           color: #333;
         }
       }
-      
+
       /* Melhorar espaçamento de botões em versão de cartão */
       .action-buttons {
         display: flex;
@@ -105,27 +113,30 @@ export const horizontalResponsiveTable = css`
   @media ${device.tablet} {
     /* Para tabelas com a classe 'responsive-columns' */
     .responsive-columns {
-      th, td {
+      th,
+      td {
         &.priority-low {
           display: none;
         }
       }
     }
   }
-  
+
   @media ${device.mobileL} {
     .responsive-columns {
-      th, td {
+      th,
+      td {
         &.priority-medium {
           display: none;
         }
       }
-      
-      th, td {
+
+      th,
+      td {
         /* Reduz padding para economizar espaço */
         padding: 8px 6px;
         font-size: 0.9rem;
-        
+
         /* Truncar texto muito longo */
         max-width: 150px;
         white-space: nowrap;
@@ -142,15 +153,15 @@ export const responsiveNumericData = css`
     .numeric-data {
       text-align: right;
       font-variant-numeric: tabular-nums;
-      
+
       &.currency:before {
-        content: 'R$';
+        content: "R$";
         margin-right: 2px;
         opacity: 0.7;
       }
-      
+
       &.percentage:after {
-        content: '%';
+        content: "%";
         margin-left: 2px;
         opacity: 0.7;
       }
@@ -162,5 +173,5 @@ export default {
   responsiveTableStyles,
   tableToCards,
   horizontalResponsiveTable,
-  responsiveNumericData
+  responsiveNumericData,
 };

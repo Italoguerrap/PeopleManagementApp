@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { device } from '../../styles/responsive';
+import styled from "styled-components";
+import { device } from "../../styles/responsive";
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -15,7 +15,7 @@ export const ModalOverlay = styled.div`
   z-index: 1000;
   animation: fadeIn 0.3s ease;
   padding: 1rem;
-  
+
   @media ${device.mobileL} {
     padding: 0.5rem;
     align-items: flex-start;
@@ -23,10 +23,14 @@ export const ModalOverlay = styled.div`
     padding-top: 2rem;
     padding-bottom: 2rem;
   }
-  
+
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 `;
 
@@ -40,14 +44,14 @@ export const ModalContent = styled.div`
   overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.3s ease;
-  
+
   @media ${device.tablet} {
     padding: 1.5rem;
     width: 90%;
     max-height: 80vh;
     font-size: 0.95rem;
   }
-  
+
   @media ${device.mobileL} {
     padding: 1rem;
     width: 95%;
@@ -55,18 +59,18 @@ export const ModalContent = styled.div`
     font-size: 0.9rem;
     border-radius: 10px;
   }
-  
+
   @keyframes slideUp {
-    from { 
+    from {
       transform: translateY(30px);
       opacity: 0;
     }
-    to { 
+    to {
       transform: translateY(0);
       opacity: 1;
     }
   }
-  
+
   h2 {
     margin-top: 0;
     color: #333;
@@ -74,26 +78,26 @@ export const ModalContent = styled.div`
     margin-bottom: 1.5rem;
     text-align: center;
     position: relative;
-    
+
     @media ${device.tablet} {
       font-size: 1.5rem;
       margin-bottom: 1rem;
     }
-    
+
     @media ${device.mobileL} {
       font-size: 1.3rem;
       margin-bottom: 0.8rem;
     }
-    
+
     &:after {
-      content: '';
+      content: "";
       display: block;
       width: 60px;
       height: 4px;
       background: linear-gradient(90deg, #02ffff, #0088ff);
       border-radius: 2px;
       margin: 0.8rem auto 0;
-      
+
       @media ${device.mobileL} {
         width: 40px;
         height: 3px;
@@ -101,49 +105,49 @@ export const ModalContent = styled.div`
       }
     }
   }
-  
+
   form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   label {
     font-size: 0.95rem;
     font-weight: 500;
     color: #555;
-    
+
     @media ${device.mobileL} {
       font-size: 0.85rem;
     }
     margin-bottom: 0.3rem;
   }
-    input {
+  input {
     width: 93%;
     padding: 0.8rem;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.2s;
-    
+
     @media ${device.tablet} {
       width: 95%;
       padding: 0.7rem;
     }
-    
+
     @media ${device.mobileL} {
       width: 100%;
       padding: 0.7rem;
       font-size: 16px; /* Prevents zooming on iOS */
       border-radius: 8px;
     }
-    
+
     &:focus {
       outline: none;
       border-color: #0088ff;
       box-shadow: 0 0 0 3px rgba(0, 136, 255, 0.2);
     }
-    
+
     &::placeholder {
       color: #aaa;
     }
@@ -162,16 +166,16 @@ export const ModalContent = styled.div`
     background-size: 16px;
     cursor: pointer;
     transition: all 0.2s;
-    
+
     @media ${device.tablet} {
       padding: 0.7rem;
     }
-    
+
     @media ${device.mobileL} {
       padding: 0.7rem;
       font-size: 16px; /* Prevents zooming on iOS */
     }
-    
+
     &:focus {
       outline: none;
       border-color: #0088ff;
@@ -182,29 +186,29 @@ export const ModalContent = styled.div`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   width: 100%;
   margin-top: 1.5rem;
 
-  &  button {
+  & button {
     margin: 0.5rem;
-    width: 100%;   
+    width: 100%;
   }
-  
+
   @media ${device.tablet} {
     gap: 0.5rem;
     margin-top: 1.2rem;
-    
+
     & button {
       margin: 0.25rem;
     }
   }
-  
+
   @media ${device.mobileL} {
     flex-direction: column-reverse; /* Action buttons on top for better UX */
     gap: 15px;
     margin-top: 1rem;
-    
+
     & button {
       margin: 0;
       height: auto;

@@ -6,14 +6,14 @@ export const Container = styled.div`
   height: auto;
   margin: 0;
   padding: 1.5rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #fafafa;
   min-height: 100vh;
-  
+
   @media ${device.tablet} {
     padding: 1rem;
   }
-  
+
   @media ${device.mobileL} {
     padding: 0.75rem 0.6rem;
     display: flex;
@@ -22,10 +22,9 @@ export const Container = styled.div`
   }
 `;
 
-
 export const ControlsContainer = styled.div`
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   width: 100%;
   align-items: center;
   background-color: #fff;
@@ -34,7 +33,7 @@ export const ControlsContainer = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   margin-bottom: 1.5rem;
   transition: all 0.3s ease;
-    &:hover {
+  &:hover {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   }
 
@@ -49,7 +48,7 @@ export const ControlsContainer = styled.div`
   & div > button {
     margin: 0.5rem 1rem 0.5rem 0;
     min-width: 160px;
-    
+
     @media ${device.tablet} {
       min-width: 130px;
     }
@@ -63,11 +62,11 @@ export const ControlsContainer = styled.div`
   & div.controls-left > button {
     margin: 0.5rem 1rem 0.5rem 0;
     min-width: 160px;
-    
+
     @media ${device.tablet} {
       min-width: 130px;
     }
-    
+
     @media ${device.mobileL} {
       min-width: unset;
       width: 100%;
@@ -75,7 +74,7 @@ export const ControlsContainer = styled.div`
       justify-content: center;
     }
   }
-  
+
   .loading-indicator {
     color: #0088ff;
     font-style: italic;
@@ -94,55 +93,61 @@ export const ControlsContainer = styled.div`
     align-items: center;
     box-shadow: 0 2px 5px rgba(255, 152, 0, 0.3);
     transition: all 0.2s ease;
-    
+
     @media ${device.mobileL} {
       margin: 0.5rem 0;
       width: 100%;
       justify-content: center;
     }
-    
+
     &:hover {
       background-color: #f57c00;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(255, 152, 0, 0.4);
     }
-    
+
     .clear-icon {
       margin-left: 8px;
       cursor: pointer;
       transition: transform 0.2s ease;
-      
+
       &:hover {
         transform: rotate(90deg);
         opacity: 0.8;
       }
     }
   }
-  
+
   @media ${device.tablet} {
     flex-direction: column;
     padding: 0.75rem;
   }
-  
+
   @media ${device.mobileL} {
     flex-direction: column;
     padding: 0.75rem;
-    
+
     & div {
       flex-direction: column;
     }
-    
+
     & div > button {
       width: 100%;
       margin: 0.3rem 0;
       justify-content: center;
     }
   }
-  
+
   @keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
+    0% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.6;
+    }
   }
 `;
 
@@ -156,11 +161,11 @@ export const Title = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
-  
+
   @media ${device.tablet} {
     font-size: 1.8rem;
   }
-  
+
   @media ${device.mobileL} {
     font-size: 1.5rem;
     width: 100%;
@@ -175,12 +180,12 @@ export const Description = styled.p`
   font-size: 1.1rem;
   max-width: 600px;
   line-height: 1.5;
-  
+
   @media ${device.tablet} {
     font-size: 1rem;
     margin-bottom: 1rem;
   }
-  
+
   @media ${device.mobileL} {
     font-size: 0.9rem;
     margin-bottom: 1rem;

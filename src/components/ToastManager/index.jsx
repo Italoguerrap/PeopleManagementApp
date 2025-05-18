@@ -1,12 +1,12 @@
-import React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const ToastType = {
-  SUCCESS: 'success',
-  ERROR: 'error',
-  INFO: 'info',
-  WARNING: 'warning'
+  SUCCESS: "success",
+  ERROR: "error",
+  INFO: "info",
+  WARNING: "warning",
 };
 
 export function showToast(message, type = ToastType.INFO) {
@@ -19,7 +19,7 @@ export function showToast(message, type = ToastType.INFO) {
     draggable: true,
     progress: undefined,
     transition: toast.Slide,
-    theme: "colored"
+    theme: "colored",
   };
 
   switch (type) {
