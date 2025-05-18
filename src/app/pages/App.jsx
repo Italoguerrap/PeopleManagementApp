@@ -11,16 +11,22 @@ import { IoClose } from "react-icons/io5";
 import { Table } from '../../components/table';
 import { FilterModal } from '../../components/FilterModal'; 
 import { AddUserModal } from '../../components/AddUserModal';
+import { EmptyState } from '../../components/EmptyState';
+import { NoResultsState } from '../../components/NoResultsState';
+import { LoadingState } from '../../components/LoadingState';
+import { ToastManager, showToast, ToastType } from '../../components/ToastManager';
 import { FiFilter } from "react-icons/fi";
-import { FaPlus } from "react-icons/fa6";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { MdClear } from "react-icons/md";
+import { AddUserButton } from '../../components/AddUserButton';
+import { searchPeople } from '../../services/api';
 
 export function App() {
-
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isFiltered, setIsFiltered] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,59 +37,160 @@ export function App() {
     country: '',
     cpf: ''
   });
-
-
+  
   async function getUsers() {
-    const params = new URLSearchParams();
-
-    if (formData.name) params.append("query", formData.name);
-
     try {
-      const response = await fetch(`http://localhost:5097/api/v1/People?${params.toString()}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Erro ao buscar usuários: ${errorText}`);
-      }
-
-      const data = await response.json();
+      setLoading(true);
+      setLoadError(false);
+      
+      const query = formData.name || '';
+      const data = await searchPeople(query);
+      
       setUsers(data);
-
-      toast.success("Usuários resgatars com sucesso!");
-
+      setIsFiltered(!!query);
+      
+      if (users.length > 0) {
+        showToast("Usuários carregados com sucesso!", ToastType.SUCCESS);
+      }
     } catch (err) {
       console.error(err);
-      toast.error("Erro ao resgatar usuários!");
+      
+      setLoadError(true);
+    
+      if (users.length > 0 && err.message !== "Failed to fetch") {
+        showToast("Erro ao resgatar usuários: " + err.message, ToastType.ERROR);
+      }
+      
+    } finally {
+      setLoading(false);
+    }
+  }
+  
+  async function clearAllFilters() {
+    setFormData({
+      name: '',
+      email: '',
+      gender: '',
+      dateOfBirth: '',
+      naturality: '',
+      nationality: '',
+      country: '',
+      cpf: ''
+    });
+    setIsFiltered(false);
+    try {
+      setLoading(true);
+      setLoadError(false);
+      
+      const data = await searchPeople('');
+      setUsers(data);
+    } catch (err) {
+      console.error(err);
+      
+      setLoadError(true);
+      
+      if (err.message !== "Failed to fetch") {
+        showToast("Erro ao resgatar usuários: " + err.message, ToastType.ERROR);
+      }
+      
+    } finally {
+      setLoading(false);
     }
   }
 
   useEffect(() => {
+    let reconnectTimer;
+    
+    if (loadError) {
+      reconnectTimer = setTimeout(() => {
+        getUsers();
+      }, 5000);
+    }
+    
+    return () => {
+      if (reconnectTimer) {
+        clearTimeout(reconnectTimer);
+      }
+    };
+  }, [loadError]);
+
+  useEffect(() => {
     getUsers();
-  }, []);
-
-  return (
+  }, []);  return (
     <Container>
-
-      <Title>Gerenciamento de Usuários</Title>
-      <Description>Gerencie os membros da sua equipe e suas permissões de conta aqui.</Description>
-      <ToastContainer />
-      <ControlsContainer>
-        <div>
-          <Button title="Add User" icon={<FaPlus /> }  colorButton="#02ffff" onClick={() => setIsAddUserModalOpen(true)}/>
-          <Button title=" Add Filter" icon={<FiFilter />}  colorButton="#02ffff" onClick={() => setIsFilterModalOpen(true)} />
-        </div>
-
-      </ControlsContainer>
-
-      {users.length > 0 && <Table users={users} />}
-
-      {isFilterModalOpen && (<FilterModal onClose={() => setIsFilterModalOpen(false)} />)}
-      {isAddUserModalOpen && (<AddUserModal onClose={() => setIsAddUserModalOpen(false)} onUserAdded={getUsers} />  )}
+      {}
+      {loading || loadError ? (
+        <LoadingState 
+          message={loadError ? "Erro ao conectar com o servidor" : "Carregando usuários..."}
+          subtitle={loadError ? "Tentando reconectar automaticamente..." : "Por favor, aguarde enquanto buscamos as informações."}
+          isError={loadError}
+          onRetry={() => getUsers()}
+        />
+      ) : users.length === 0 && !isFiltered ? (
+        <EmptyState onAddClick={() => setIsAddUserModalOpen(true)} />
+      ) : (
+        <>
+          <Title>Gerenciamento de Usuários</Title>
+          <Description>Gerencie os membros da sua equipe e suas permissões de conta aqui.</Description>
+          <ToastManager />
+          
+          <ControlsContainer>
+            <div>
+              <AddUserButton 
+                onClick={() => setIsAddUserModalOpen(true)}
+              />
+              <Button 
+                title={isFiltered ? "Editar Filtros" : "Adicionar Filtros"} 
+                icon={<FiFilter />}  
+                colorButton="#02ffff" 
+                onClick={() => setIsFilterModalOpen(true)} 
+              />
+              {isFiltered && (
+                <span className="filter-badge">
+                  Filtros Ativos
+                  <MdClear 
+                    className="clear-icon" 
+                    onClick={clearAllFilters} 
+                    title="Limpar filtros"
+                    style={{ marginLeft: '5px', cursor: 'pointer' }}
+                  />
+                </span>
+              )}
+            </div>
+          </ControlsContainer>          
+          {}
+          {users.length > 0 ? (
+            <Table 
+              users={users} 
+              onLastUserDeleted={() => {            
+                setUsers([]);
+                setIsFiltered(false);
+                showToast("Todos os usuários foram removidos!", ToastType.SUCCESS);
+              }}
+            />
+          ) : (
+            <NoResultsState 
+              onClearFilter={clearAllFilters} 
+              onShowFilter={() => setIsFilterModalOpen(true)} 
+            />
+          )}
+        </>
+      )}
+      {isFilterModalOpen && (
+        <FilterModal 
+          onClose={() => setIsFilterModalOpen(false)} 
+          onFilterApplied={(filteredResults) => {
+            setUsers(filteredResults);
+            setIsFiltered(true);
+          }}
+        />
+      )}
+      {isAddUserModalOpen && (
+        <AddUserModal 
+          onClose={() => setIsAddUserModalOpen(false)} 
+          onUserAdded={getUsers} 
+        />
+      )}
     </Container>
     );
 }

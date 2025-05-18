@@ -1,35 +1,64 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const pulse = keyframes`
+  0% {
+    box-shadow: 0 0 0 0 rgba(2, 255, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(2, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(2, 255, 255, 0);
+  }
+`;
 
 export const Container = styled.button`
-    background-color: ${props => props.$colorButton || 'gray'};
-    color: black;
-    height: 40px;
+    background-color: ${props => props.$colorButton || '#0088ff'};
+    color: ${props => props.$colorButton === '#02ffff' || props.$colorButton === '#00ff00' ? '#000' : '#fff'};
+    height: 44px;
     border: 0;
-    padding: 0 16px;
+    padding: 0 1.5rem;
     margin-top: 16px;
-    border-radius: 10px;
+    border-radius: 50px;
     font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     cursor: pointer;
-
-  transition: filter 0.2s ease;  
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    animation: ${props => props.$primary ? pulse : 'none'} 2s infinite;
 
   &:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 8px ${props => props.$colorButton || 'gray'};
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px ${props => props.$colorButton || 'gray'};
+    box-shadow: 0 0 0 3px rgba(${props => {
+      const color = props.$colorButton || '#0088ff';
+      // Convert hex to RGB
+      const hex = color.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      return `${r}, ${g}, ${b}, 0.4`;
+    }});
   }
 
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 
   &:active {
-    filter: brightness(0.85);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
-
 `;

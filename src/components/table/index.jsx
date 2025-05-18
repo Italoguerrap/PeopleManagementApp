@@ -1,71 +1,81 @@
-import { Container,TableContainer, PaginationFooter, Thead, Tbody, Tr, Th, Td, StatusBadge, Photo } from "./styles";
+import { Container,TableContainer, PaginationFooter, Thead, Tbody, Tr, HeaderTr, Th, Td, StatusBadge, Photo, PaginationButton } from "./styles";
 import { IoClose } from "react-icons/io5";
-import { FiEdit  } from "react-icons/fi";
-import { EditModal } from '../../components/EditModal';
-import { useState } from 'react'
+import { FiEdit, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { EditModal } from "../../components/EditModal";
+import { DeleteConfirmationModal } from "../../components/DeleteConfirmationModal";
+import { useState, useEffect } from "react";
 import { TfiLayoutLineSolid } from "react-icons/tfi";
+import { deletePerson, getGenderText } from "../../services/api";
+import { ToastContainer, toast } from "react-toastify";
 
-export function Table({ users }) {
+export function Table({ users, onLastUserDeleted }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [usersPerPage, setUsersPerPage] = useState(5);
+  const [usersData, setUsersData] = useState(users);
 
-  const [currentPage, setCurrentPage] = useState(1);//paginação melçhorar
-  const [usersPerPage, setUsersPerPage] = useState(5); // Default 5
-
-    // Ajustar currentPage se usersPerPage mudar para evitar páginas inválidas
   function handleUsersPerPageChange(event) {
     setUsersPerPage(Number(event.target.value));
-    setCurrentPage(1); // resetar página para 1 ao mudar a quantidade por página
+    setCurrentPage(1);
   }
+
+  useEffect(() => {
+    setUsersData(users);
+  }, [users]);
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUsers = usersData.length > 0
+    ? usersData.slice(indexOfFirstUser, indexOfLastUser)
+    : users.slice(indexOfFirstUser, indexOfLastUser);
 
   function handleEditClick(user) {
     setSelectedUser(user);
     setIsEditModalOpen(true);
   }
 
-  function getGender(gender) {
-    if(gender == 0) {
-      return null;
+  function handleDeleteClick(user) {
+    setSelectedUser(user);
+    setIsDeleteModalOpen(true);
+  }
+
+  function handleUserDeleted() {
+    const updatedUsers = usersData.filter(user => user.id !== selectedUser.id);
+    setUsersData(updatedUsers);
+
+    const maxPage = Math.ceil(updatedUsers.length / usersPerPage);
+    if (currentPage > maxPage && maxPage > 0) {
+      setCurrentPage(maxPage);
     }
-    else  if(gender == 2) {
-      return "Masculino";
+
+    if (updatedUsers.length === 0 && onLastUserDeleted) {
+      onLastUserDeleted();
     }
-    else {
-      return "Masculino";
-    }
+
+    toast.success("Usuário removido da lista com sucesso!");
   }
 
   return (
     <Container>
-      <TableContainer>
+      <ToastContainer />      <TableContainer>
         <Thead>
-          <Tr>
-            <Th>#</Th>
-            <Th>Nome</Th>
-            <Th>Email</Th>
-            <Th>Sexo</Th>
-            <Th>Data de Nascimento</Th>
-            <Th>Naturalidade</Th>
-            <Th>Nacionalidade</Th>
-            <Th>CPF</Th>
-            <Th>Ações</Th>
-          </Tr>
+          <HeaderTr>
+            <Th>#</Th><Th>Nome</Th><Th>Email</Th><Th>Sexo</Th><Th>Data de Nascimento</Th>
+            <Th>Naturalidade</Th><Th>Nacionalidade</Th><Th>CPF</Th><Th>Ações</Th>
+          </HeaderTr>
         </Thead>
         <Tbody>
-          {currentUsers.map((user) => (
-            <Tr key={user.id}>
+          {currentUsers.map((user, index) => (
+            <Tr key={user.id} $index={index}>
               <Td>{user.id}</Td>
-              <Td> <Photo/>{user.name}</Td>
+              <Td><Photo />{user.name}</Td>
               <Td>{user.email || <TfiLayoutLineSolid />}</Td>
-              { console.log( user)}
-              <Td>{ getGender(user.gender) || <TfiLayoutLineSolid />}</Td>
+              <Td>{getGenderText(user.gender) || <TfiLayoutLineSolid />}</Td>
               <Td>
                 {user.dateOfBirth
-                  ? new Date(user.dateOfBirth).toLocaleDateString('pt-BR')
+                  ? new Date(user.dateOfBirth).toLocaleDateString("pt-BR")
                   : <TfiLayoutLineSolid />}
               </Td>
               <Td>{user.naturality || <TfiLayoutLineSolid />}</Td>
@@ -73,11 +83,16 @@ export function Table({ users }) {
               <Td>{user.cpf || <TfiLayoutLineSolid />}</Td>
               <Td>
                 <StatusBadge>
-                  <FiEdit 
+                  <FiEdit
                     onClick={() => handleEditClick(user)}
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: "pointer" }}
+                    title="Editar usuário"
                   />
-                <IoClose style={{ cursor: 'pointer' }} />
+                  <IoClose
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleDeleteClick(user)}
+                    title="Excluir usuário"
+                  />
                 </StatusBadge>
               </Td>
             </Tr>
@@ -98,35 +113,58 @@ export function Table({ users }) {
             <option value={50}>50</option>
           </select>
         </div>
-       
-        <div style={{ display: 'flex', gap: 8 }}>
-          {Array.from({ length: Math.ceil(users.length / usersPerPage) }, (_, i) => i + 1).map((pageNumber) => (
-            <button
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          {currentPage > 1 && (
+            <PaginationButton onClick={() => setCurrentPage(currentPage - 1)}>
+              <FiChevronLeft />
+            </PaginationButton>
+          )}
+
+          {Array.from(
+            { length: Math.ceil(usersData.length / usersPerPage) },
+            (_, i) => i + 1
+          ).map((pageNumber) => (
+            <PaginationButton
               key={pageNumber}
               onClick={() => setCurrentPage(pageNumber)}
-              style={{
-                padding: '6px 12px',
-                border: '1px solid #ccc',
-                backgroundColor: pageNumber === currentPage ? '#007bff' : '#fff',
-                color: pageNumber === currentPage ? '#fff' : '#000',
-                borderRadius: 4,
-                cursor: 'pointer'
-              }}
+              $active={pageNumber === currentPage}
             >
               {pageNumber}
-            </button>
+            </PaginationButton>
           ))}
-        </div>
 
+          {currentPage < Math.ceil(usersData.length / usersPerPage) && (
+            <PaginationButton onClick={() => setCurrentPage(currentPage + 1)}>
+              <FiChevronRight />
+            </PaginationButton>
+          )}
+        </div>
       </PaginationFooter>
 
       {isEditModalOpen && selectedUser && (
         <EditModal
-          user={selectedUser}            
+          user={selectedUser}
           onClose={() => setIsEditModalOpen(false)}
+          onUserUpdated={(updatedUser) => {
+            setIsEditModalOpen(false);
+            if (updatedUser) {
+              const updatedUsers = usersData.map(user =>
+                user.id === updatedUser.id ? updatedUser : user
+              );
+              setUsersData(updatedUsers);
+              toast.success("Lista de usuários atualizada com sucesso!");
+            }
+          }}
         />
-      )}   
-  </Container>
-  );
+      )}
 
+      {isDeleteModalOpen && selectedUser && (
+        <DeleteConfirmationModal
+          user={selectedUser}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onUserDeleted={handleUserDeleted}
+        />
+      )}
+    </Container>
+  );
 }
