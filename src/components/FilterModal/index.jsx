@@ -33,9 +33,7 @@ export function FilterModal({ onClose, onFilterApplied }) {
       setLoading(true);
 
       const query = JSON.stringify(formData);
-      
-      console.log("Query: ", query);
-
+    
       const results = await searchPeople(query);
       
       let filteredResults = [...results];

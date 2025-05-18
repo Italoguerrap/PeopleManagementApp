@@ -1,0 +1,125 @@
+/* Estilos globais para responsividade */
+html {
+  box-sizing: border-box;
+  touch-action: manipulation; /* Improved touch handling */
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Estilos para melhorar clicabilidade em dispositivos móveis */
+button, 
+a, 
+[role="button"],
+input[type="button"],
+input[type="submit"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input, 
+select, 
+textarea {
+  font-size: 16px; /* Evita zoom em iOS */
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Media queries para responsividade */
+@media screen and (max-width: 1024px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  html {
+    font-size: 14px;
+  }
+  
+  /* Ajuste para melhorar interface em telas pequenas */
+  .btn-full-mobile {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+/* Utilitários para acessibilidade */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Classes utilitárias para responsividade */
+.mobile-only {
+  display: none;
+}
+
+@media screen and (max-width: 425px) {
+  .mobile-only {
+    display: initial;
+  }
+  
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Ajuste para telas muito pequenas */
+@media screen and (max-width: 320px) {
+  .mobile-hide {
+    display: none !important;
+  }
+}
+
+/* Estilos para melhorar acessibilidade em telas sensíveis ao toque */
+@media (hover: none) {
+  a:hover,
+  button:hover {
+    transition: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Melhoria de contraste para telas com alto brilho */
+@media (prefers-contrast: high) {
+  body {
+    background-color: white;
+    color: black;
+  }
+}

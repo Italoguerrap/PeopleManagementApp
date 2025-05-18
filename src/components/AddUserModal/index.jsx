@@ -101,14 +101,14 @@ export function AddUserModal({ onClose, onUserAdded  }) {
     };
     
     try {      
-      setLoading(true);
-      const result = await addPerson(payload);
+      setLoading(true);      const result = await addPerson(payload);
       toast.success("Usuário adicionado com sucesso!");
       
       setTimeout(() => {
         onUserAdded();
         onClose();
       }, 1500);
+    } catch (error) {
       console.error('Error adding user:', error);
       
       handleApiError(error, setErrors);

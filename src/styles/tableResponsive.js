@@ -1,0 +1,166 @@
+// Este arquivo contém instruções de responsividade para tabelas
+// Pode ser usado para modificar o comportamento de tabelas em dispositivos móveis
+
+import { css } from 'styled-components';
+import { device } from './responsive';
+
+// Estilos para tornar tabelas mais responsivas em dispositivos móveis
+export const responsiveTableStyles = css`
+  @media ${device.mobileL} {
+    /* Estes estilos podem ser aplicados a qualquer tabela com a classe 'responsive-table' */
+    .responsive-table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      -ms-overflow-style: -ms-autohiding-scrollbar; /* Para IE11 */
+    }
+    
+    /* Indicador de rolagem horizontal */
+    .table-scroll-indicator {
+      display: block;
+      text-align: center;
+      color: #666;
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+      padding: 5px;
+      background-color: rgba(245, 245, 245, 0.8);
+      border-radius: 20px;
+      animation: fadeInOut 3s infinite;
+    }
+    
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+  }
+`;
+
+// Função para transformar tabelas em formato de cards para exibição móvel
+export const tableToCards = css`
+  @media ${device.mobileL} {
+    /* Aplicar apenas a tabelas com a classe 'table-to-cards' */
+    .table-to-cards {
+      thead {
+        display: none;
+      }
+      
+      tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        background-color: #fff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        
+        &:hover, &:active {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+      }
+      
+      td {
+        display: block;
+        text-align: right;
+        padding: 0.8rem 0.5rem;
+        position: relative;
+        border-bottom: 1px solid #eee;
+        
+        &:last-child {
+          border-bottom: none;
+        }
+        
+        &:before {
+          content: attr(data-label);
+          float: left;
+          font-weight: bold;
+          text-transform: uppercase;
+          font-size: 0.75rem;
+          color: #666;
+          padding-right: 10px;
+        }
+        
+        /* Melhorar legibilidade dos valores */
+        &[data-value] {
+          font-weight: 500;
+          color: #333;
+        }
+      }
+      
+      /* Melhorar espaçamento de botões em versão de cartão */
+      .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+`;
+
+// Estilos para manter a tabela horizontal, mas com colunas responsivas
+export const horizontalResponsiveTable = css`
+  @media ${device.tablet} {
+    /* Para tabelas com a classe 'responsive-columns' */
+    .responsive-columns {
+      th, td {
+        &.priority-low {
+          display: none;
+        }
+      }
+    }
+  }
+  
+  @media ${device.mobileL} {
+    .responsive-columns {
+      th, td {
+        &.priority-medium {
+          display: none;
+        }
+      }
+      
+      th, td {
+        /* Reduz padding para economizar espaço */
+        padding: 8px 6px;
+        font-size: 0.9rem;
+        
+        /* Truncar texto muito longo */
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+`;
+
+// Estilos para melhorar a visualização de dados numéricos
+export const responsiveNumericData = css`
+  @media ${device.mobileL} {
+    .numeric-data {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      
+      &.currency:before {
+        content: 'R$';
+        margin-right: 2px;
+        opacity: 0.7;
+      }
+      
+      &.percentage:after {
+        content: '%';
+        margin-left: 2px;
+        opacity: 0.7;
+      }
+    }
+  }
+`;
+
+export default {
+  responsiveTableStyles,
+  tableToCards,
+  horizontalResponsiveTable,
+  responsiveNumericData
+};

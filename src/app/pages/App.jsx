@@ -131,8 +131,7 @@ export function App() {
       ) : (
         <>
           <Title>Gerenciamento de Usuários</Title>
-          <Description>Gerencie os membros da sua equipe e suas permissões de conta aqui.</Description>
-          <ToastManager />
+          <Description>Gerencie os membros da sua equipe e suas permissões de conta aqui.</Description>          <ToastManager />
           
           <ControlsContainer>
             <div>
@@ -157,8 +156,9 @@ export function App() {
                 </span>
               )}
             </div>
-          </ControlsContainer>          
-          {}
+          </ControlsContainer>
+          
+          {/* Conteúdo da tabela */}
           {users.length > 0 ? (
             <Table 
               users={users} 

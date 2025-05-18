@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { device } from '../../styles/responsive';
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -13,6 +14,15 @@ export const ModalOverlay = styled.div`
   backdrop-filter: blur(4px);
   z-index: 1000;
   animation: fadeIn 0.3s ease;
+  padding: 1rem;
+  
+  @media ${device.mobileL} {
+    padding: 0.5rem;
+    align-items: flex-start;
+    overflow-y: auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
   
   @keyframes fadeIn {
     from { opacity: 0; }
@@ -25,9 +35,26 @@ export const ModalContent = styled.div`
   padding: 2rem;
   border-radius: 12px;
   width: 450px;
-  max-width: 90vw;
+  max-width: 85vw;
+  max-height: 85vh;
+  overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.3s ease;
+  
+  @media ${device.tablet} {
+    padding: 1.5rem;
+    width: 90%;
+    max-height: 80vh;
+    font-size: 0.95rem;
+  }
+  
+  @media ${device.mobileL} {
+    padding: 1rem;
+    width: 95%;
+    max-height: 90vh;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
   
   @keyframes slideUp {
     from { 
@@ -39,14 +66,22 @@ export const ModalContent = styled.div`
       opacity: 1;
     }
   }
-  
-  h2 {
+    h2 {
     margin-top: 0;
     color: #333;
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
     text-align: center;
     position: relative;
+    
+    @media ${device.tablet} {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    @media ${device.mobileL} {
+      font-size: 1.3rem;
+    }
     
     &:after {
       content: '';
@@ -70,6 +105,10 @@ export const ModalContent = styled.div`
     font-weight: 500;
     color: #555;
     margin-bottom: 0.3rem;
+    
+    @media ${device.mobileL} {
+      font-size: 0.85rem;
+    }
   }
   
   input {
@@ -79,6 +118,17 @@ export const ModalContent = styled.div`
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.2s;
+    
+    @media ${device.tablet} {
+      width: 95%;
+      padding: 0.7rem;
+    }
+    
+    @media ${device.mobileL} {
+      width: 92%;
+      padding: 0.6rem;
+      font-size: 0.9rem;
+    }
     
     &:focus {
       outline: none;
@@ -185,5 +235,25 @@ export const ButtonContainer = styled.div`
   & button {
     margin: 0.5rem;
     width: 100%;   
+  }
+  
+  @media ${device.tablet} {
+    gap: 0.5rem;
+    
+    & button {
+      margin: 0.25rem;
+    }
+  }
+  
+  @media ${device.mobileL} {
+    flex-direction: column;
+    gap: 15px;
+    
+    & button {
+      margin: 0;
+      height: auto;
+      min-height: 44px;
+      padding: 10px;
+    }
   }
 `;

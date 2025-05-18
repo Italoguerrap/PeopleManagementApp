@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { device } from "../../styles/responsive";
 
 const pulse = keyframes`
   0% {
@@ -28,9 +29,27 @@ export const Container = styled.button`
     justify-content: center;
     gap: 0.5rem;
     cursor: pointer;
+    white-space: nowrap; /* Impede que o texto quebre em múltiplas linhas */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 44px; /* Garantir área de toque mínima */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     animation: ${props => props.$primary ? pulse : 'none'} 2s infinite;
+    
+    @media ${device.tablet} {
+      height: 42px;
+      padding: 0 1.2rem;
+      font-size: 0.9rem;
+    }
+    
+    @media ${device.mobileL} {
+      height: 44px; /* Mantenha 44px para melhor área de toque em dispositivos móveis */
+      padding: 0 1rem;
+      font-size: 0.85rem;
+      gap: 0.3rem;
+      width: 100%;
+    }
 
   &:hover {
     transform: translateY(-3px);
@@ -50,15 +69,21 @@ export const Container = styled.button`
     }});
   }
 
+  &:active {
+    transform: translateY(-1px);
+  }
+
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
   }
-
-  &:active {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  
+  /* Para dispositivos com tela sensível ao toque */
+  @media (hover: none) {
+    &:hover {
+      transform: none;
+    }
   }
 `;

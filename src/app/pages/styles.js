@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { device } from "../../styles/responsive";
 
 export const Container = styled.div`
   width: auto;
@@ -8,6 +9,17 @@ export const Container = styled.div`
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #fafafa;
   min-height: 100vh;
+  
+  @media ${device.tablet} {
+    padding: 1rem;
+  }
+  
+  @media ${device.mobileL} {
+    padding: 0.75rem 0.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 
@@ -22,22 +34,48 @@ export const ControlsContainer = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   margin-bottom: 1.5rem;
   transition: all 0.3s ease;
-  
-  &:hover {
+    &:hover {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   }
 
-  & div{
+  & div {
     width: 100%;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    gap: 10px;
   }
 
   & div > button {
     margin: 0.5rem 1rem 0.5rem 0;
-    min-width: 160px;   
+    min-width: 160px;
+    
+    @media ${device.tablet} {
+      min-width: 130px;
+    }
+    flex-shrink: 0;
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
+
+  & div.controls-left > button {
+    margin: 0.5rem 1rem 0.5rem 0;
+    min-width: 160px;
+    
+    @media ${device.tablet} {
+      min-width: 130px;
+    }
+    
+    @media ${device.mobileL} {
+      min-width: unset;
+      width: 100%;
+      margin: 0.5rem 0;
+      justify-content: center;
+    }
+  }
+  
   .loading-indicator {
     color: #0088ff;
     font-style: italic;
@@ -57,6 +95,12 @@ export const ControlsContainer = styled.div`
     box-shadow: 0 2px 5px rgba(255, 152, 0, 0.3);
     transition: all 0.2s ease;
     
+    @media ${device.mobileL} {
+      margin: 0.5rem 0;
+      width: 100%;
+      justify-content: center;
+    }
+    
     &:hover {
       background-color: #f57c00;
       transform: translateY(-2px);
@@ -74,6 +118,27 @@ export const ControlsContainer = styled.div`
       }
     }
   }
+  
+  @media ${device.tablet} {
+    flex-direction: column;
+    padding: 0.75rem;
+  }
+  
+  @media ${device.mobileL} {
+    flex-direction: column;
+    padding: 0.75rem;
+    
+    & div {
+      flex-direction: column;
+    }
+    
+    & div > button {
+      width: 100%;
+      margin: 0.3rem 0;
+      justify-content: center;
+    }
+  }
+  
   @keyframes pulse {
     0% { opacity: 0.6; }
     50% { opacity: 1; }
@@ -91,6 +156,17 @@ export const Title = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
+  
+  @media ${device.tablet} {
+    font-size: 1.8rem;
+  }
+  
+  @media ${device.mobileL} {
+    font-size: 1.5rem;
+    width: 100%;
+    margin-bottom: 0.3rem;
+    text-align: center;
+  }
 `;
 
 export const Description = styled.p`
@@ -99,4 +175,16 @@ export const Description = styled.p`
   font-size: 1.1rem;
   max-width: 600px;
   line-height: 1.5;
+  
+  @media ${device.tablet} {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  @media ${device.mobileL} {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    width: 100%;
+  }
 `;

@@ -1,12 +1,13 @@
 import { Container,TableContainer, PaginationFooter, Thead, Tbody, Tr, HeaderTr, Th, Td, StatusBadge, Photo, PaginationButton } from "./styles";
 import { IoClose } from "react-icons/io5";
-import { FiEdit, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiEdit, FiChevronLeft, FiChevronRight, FiArrowRight } from "react-icons/fi";
 import { EditModal } from "../../components/EditModal";
 import { DeleteConfirmationModal } from "../../components/DeleteConfirmationModal";
 import { useState, useEffect } from "react";
 import { TfiLayoutLineSolid } from "react-icons/tfi";
 import { deletePerson, getGenderText } from "../../services/api";
 import { ToastContainer, toast } from "react-toastify";
+import SwipeableTable from "../SwipeableTable";
 
 export function Table({ users, onLastUserDeleted }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -59,46 +60,56 @@ export function Table({ users, onLastUserDeleted }) {
 
   return (
     <Container>
-      <ToastContainer />      <TableContainer>
-        <Thead>
-          <HeaderTr>
-            <Th>#</Th><Th>Nome</Th><Th>Email</Th><Th>Sexo</Th><Th>Data de Nascimento</Th>
-            <Th>Naturalidade</Th><Th>Nacionalidade</Th><Th>CPF</Th><Th>Ações</Th>
-          </HeaderTr>
-        </Thead>
-        <Tbody>
-          {currentUsers.map((user, index) => (
-            <Tr key={user.id} $index={index}>
-              <Td>{user.id}</Td>
-              <Td><Photo />{user.name}</Td>
-              <Td>{user.email || <TfiLayoutLineSolid />}</Td>
-              <Td>{getGenderText(user.gender) || <TfiLayoutLineSolid />}</Td>
-              <Td>
-                {user.dateOfBirth
-                  ? new Date(user.dateOfBirth).toLocaleDateString("pt-BR")
-                  : <TfiLayoutLineSolid />}
-              </Td>
-              <Td>{user.naturality || <TfiLayoutLineSolid />}</Td>
-              <Td>{user.country || <TfiLayoutLineSolid />}</Td>
-              <Td>{user.cpf || <TfiLayoutLineSolid />}</Td>
-              <Td>
-                <StatusBadge>
-                  <FiEdit
-                    onClick={() => handleEditClick(user)}
-                    style={{ cursor: "pointer" }}
-                    title="Editar usuário"
-                  />
-                  <IoClose
-                    style={{ cursor: "pointer" }}
-                    onClick={() => handleDeleteClick(user)}
-                    title="Excluir usuário"
-                  />
-                </StatusBadge>
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </TableContainer>
+      <ToastContainer />
+      <SwipeableTable>
+        <TableContainer className="responsive-table responsive-columns">
+          <Thead>
+            <HeaderTr>
+              <Th className="priority-low">#</Th>
+              <Th>Nome</Th>
+              <Th>Email</Th>
+              <Th className="priority-medium">Sexo</Th>
+              <Th className="priority-medium">Data de Nascimento</Th>
+              <Th className="priority-low">Naturalidade</Th>
+              <Th className="priority-low">Nacionalidade</Th>
+              <Th>CPF</Th>
+              <Th>Ações</Th>
+            </HeaderTr>
+          </Thead>
+          <Tbody>
+            {currentUsers.map((user, index) => (
+              <Tr key={user.id} $index={index}>
+                <Td className="priority-low" data-label="#">{user.id}</Td>
+                <Td data-label="Nome"><Photo />{user.name}</Td>
+                <Td data-label="Email">{user.email || <TfiLayoutLineSolid />}</Td>
+                <Td className="priority-medium" data-label="Sexo">{getGenderText(user.gender) || <TfiLayoutLineSolid />}</Td>
+                <Td className="priority-medium" data-label="Data de Nascimento">
+                  {user.dateOfBirth
+                    ? new Date(user.dateOfBirth).toLocaleDateString("pt-BR")
+                    : <TfiLayoutLineSolid />}
+                </Td>
+                <Td className="priority-low" data-label="Naturalidade">{user.naturality || <TfiLayoutLineSolid />}</Td>
+                <Td className="priority-low" data-label="Nacionalidade">{user.country || <TfiLayoutLineSolid />}</Td>
+                <Td data-label="CPF">{user.cpf || <TfiLayoutLineSolid />}</Td>
+                <Td data-label="Ações">
+                  <StatusBadge>
+                    <FiEdit
+                      onClick={() => handleEditClick(user)}
+                      style={{ cursor: "pointer" }}
+                      title="Editar usuário"
+                    />
+                    <IoClose
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleDeleteClick(user)}
+                      title="Excluir usuário"
+                    />
+                  </StatusBadge>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </TableContainer>
+      </SwipeableTable>
 
       <PaginationFooter>
         <div>
@@ -113,7 +124,7 @@ export function Table({ users, onLastUserDeleted }) {
             <option value={50}>50</option>
           </select>
         </div>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }} className="pagination-controls">
           {currentPage > 1 && (
             <PaginationButton onClick={() => setCurrentPage(currentPage - 1)}>
               <FiChevronLeft />
