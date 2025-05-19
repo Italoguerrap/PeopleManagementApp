@@ -20,10 +20,10 @@ export function DeleteConfirmationModal({ user, onClose, onUserDeleted }) {
 
       toast.success("Usuário excluído com sucesso!");
       if (onUserDeleted) {
+        onUserDeleted();
         setTimeout(() => {
-          onUserDeleted();
           onClose();
-        }, 1500);
+        }, 500);
       }
     } catch (err) {
       toast.error("Erro ao excluir usuário: " + err.message);

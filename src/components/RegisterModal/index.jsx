@@ -18,6 +18,7 @@ import {
   validateForm,
   handleApiError,
 } from "../../services/formUtils";
+import { countryNames } from "../../services/countries";
 
 export function RegisterModal({ onClose, onRegistrationSuccess }) {
   const [loading, setLoading] = useState(false);
@@ -128,8 +129,7 @@ export function RegisterModal({ onClose, onRegistrationSuccess }) {
     if (!validateFormData()) {
       return;
     }
-    
-    const payload = {
+      const payload = {
       name: formData.name,
       gender: gender,
       email: formData.email,
@@ -138,10 +138,10 @@ export function RegisterModal({ onClose, onRegistrationSuccess }) {
         : null,
       naturality: formData.naturality || null,
       nationality: formData.nationality || null,
-      cpf: formData.cpf || null,
+      cpf: formData.cpf ? formData.cpf.replace(/\D/g, '') : null,
       password: formData.password,
     };
-
+    
     try {
       setLoading(true);
       const result = await addPerson(payload);
@@ -152,8 +152,16 @@ export function RegisterModal({ onClose, onRegistrationSuccess }) {
           onRegistrationSuccess(result);
         }
         onClose();
-      }, 1500);
-    } catch (error) {
+      }, 1500);    } catch (error) {
+      // Scroll to the CPF field if it has an error
+      if (error.fieldErrors && error.fieldErrors.cpf) {
+        const cpfField = document.getElementById('cpf');
+        if (cpfField) {
+          cpfField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => cpfField.focus(), 500);
+        }
+      }
+      
       handleApiError(error, setErrors);
     } finally {
       setLoading(false);
@@ -288,18 +296,28 @@ export function RegisterModal({ onClose, onRegistrationSuccess }) {
               onChange={handleChange}
               placeholder="Cidade de nascimento"
             />
-          </div>
-
-          <div className="form-group">
+          </div>          <div className="form-group">
             <label htmlFor="nationality">Nacionalidade</label>
-            <input
+            <select
               id="nationality"
-              type="text"
               name="nationality"
               value={formData.nationality}
               onChange={handleChange}
-              placeholder="País de origem"
-            />
+              className={errors.nationality ? "has-error" : ""}
+            >
+              <option value="">Selecione</option>
+              {countryNames.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
+            {errors.nationality && (
+              <div className="error-message">
+                <FaTimes size={12} />
+                {errors.nationality}
+              </div>
+            )}
           </div>
 
           <ButtonContainer>

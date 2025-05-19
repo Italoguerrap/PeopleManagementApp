@@ -19,6 +19,20 @@ function getAuthHeader() {
 function parseBackendValidationError(errorText) {
   let fieldErrors = {};
   let global = null;
+    if (typeof errorText === 'string') {
+    // Expanded pattern matching for CPF duplication errors
+    if (errorText.toLowerCase().includes('cpf') && (
+        errorText.includes('já cadastrado') || 
+        errorText.includes('já existe') ||
+        errorText.includes('pertence a outro') ||
+        errorText.includes('duplicate') ||
+        errorText.includes('já registrado') ||
+        errorText.includes('already exists'))) {
+      fieldErrors.cpf = "CPF já cadastrado no sistema. Por favor, utilize outro CPF.";
+      return { fieldErrors, global: null };
+    }
+  }
+  
   try {
     const err = JSON.parse(errorText);
     if (err && err.errors) {
@@ -229,19 +243,27 @@ export async function addPerson(personData) {
       ...getAuthHeader()
     };
     
+    // Clean the CPF before sending to ensure proper format
+    if (personData.cpf) {
+      personData.cpf = personData.cpf.replace(/\D/g, '');
+    }
+    
     const response = await fetch(PEOPLE_ENDPOINT, {
       method: "POST",
       headers,
       body: JSON.stringify(personData),
       mode: "cors",
     });
+    
     if (!response.ok) {
       const errorText = await response.text();
       const { fieldErrors, global } = parseBackendValidationError(errorText);
 
       if (Object.keys(fieldErrors).length > 0) {
         throw { fieldErrors, global };
-      }      if (errorText.includes("FluentValidation.ValidationException")) {
+      }      
+      
+      if (errorText.includes("FluentValidation.ValidationException")) {
         if (errorText.includes("Nome deve conter apenas letras")) {
           throw {
             fieldErrors: {
@@ -256,8 +278,13 @@ export async function addPerson(personData) {
           };
         }
       }
-      
-      if (errorText.includes("Este CPF já está cadastrado")) {
+        if (errorText.includes("Este CPF já está cadastrado") || 
+          errorText.includes("CPF já cadastrado") || 
+          errorText.includes("já existe") || 
+          errorText.includes("CPF") && errorText.includes("pertence a outro usuário") ||
+          errorText.includes("CPF já existe") ||
+          errorText.includes("já registrado") ||
+          errorText.toLowerCase().includes("cpf") && errorText.toLowerCase().includes("duplicate")) {
         throw {
           fieldErrors: {
             cpf: "CPF já cadastrado no sistema. Por favor, utilize outro CPF.",
@@ -294,14 +321,19 @@ export async function updatePerson(cpf, personData) {
       ...getAuthHeader()
     };
     
+    // Clean the CPF before sending to ensure proper format
+    if (personData.cpf) {
+      personData.cpf = personData.cpf.replace(/\D/g, '');
+    }
+    // Clean the original cpf parameter too if it's formatted
+    cpf = cpf.replace(/\D/g, '');
+    
     const response = await fetch(`${PEOPLE_ENDPOINT}/${cpf}`, {
       method: "PUT",
       headers,
       body: JSON.stringify(personData),
       mode: "cors",
-    });
-
-    if (!response.ok) {
+    });    if (!response.ok) {
       const errorText = await response.text();
       const { fieldErrors, global } = parseBackendValidationError(errorText);
 
@@ -309,7 +341,10 @@ export async function updatePerson(cpf, personData) {
         throw { fieldErrors, global };
       }
 
-      if (errorText.includes("CPF já cadastrado")) {
+      if (errorText.includes("CPF já cadastrado") || 
+          errorText.includes("já está cadastrado") || 
+          errorText.includes("pertence a outro usuário") ||
+          errorText.includes("já existe")) {
         throw {
           fieldErrors: {
             cpf: "CPF já cadastrado no sistema. Não é possível utilizar um CPF que já pertence a outro usuário.",
@@ -333,8 +368,7 @@ export async function updatePerson(cpf, personData) {
           fieldErrors: {
             dateofbirth: "Data de nascimento inválida ou no formato incorreto.",
           },
-        };
-      }
+        };      }
       throw { global: `Erro ao atualizar usuário: ${errorText}` };
     }
     return safeParseJson(response, {});
@@ -348,6 +382,19 @@ export async function updatePerson(cpf, personData) {
           "Não foi possível conectar ao servidor. Verifique sua conexão de internet ou tente novamente mais tarde.",
       };
     }
+    
+    // Verificar se o erro tem uma mensagem relacionada a CPF
+    if (error.message && error.message.includes("CPF") && 
+       (error.message.includes("já cadastrado") || 
+        error.message.includes("já existe") || 
+        error.message.includes("pertence a outro"))) {
+      throw {
+        fieldErrors: {
+          cpf: "CPF já cadastrado no sistema. Por favor, utilize outro CPF."
+        }
+      };
+    }
+    
     throw error;
   }
 }

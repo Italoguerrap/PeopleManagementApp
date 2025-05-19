@@ -26,7 +26,7 @@ import { deletePerson, getGenderText } from "../../services/api";
 import { toast } from "react-toastify";
 import SwipeableTable from "../SwipeableTable";
 
-export function Table({ users, onLastUserDeleted }) {
+export function Table({ users, onLastUserDeleted, onUserUpdated, onUserDeleted }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -65,6 +65,11 @@ export function Table({ users, onLastUserDeleted }) {
       (user) => user.cpf !== selectedUser.cpf,
     );
     setUsersData(updatedUsers);
+
+    // Propagar a exclusão para o componente pai
+    if (onUserDeleted) {
+      onUserDeleted(selectedUser.cpf);
+    }
 
     const maxPage = Math.ceil(updatedUsers.length / usersPerPage);
     if (currentPage > maxPage && maxPage > 0) {
@@ -199,6 +204,12 @@ export function Table({ users, onLastUserDeleted }) {
                 user.cpf === updatedUser.cpf ? updatedUser : user,
               );
               setUsersData(updatedUsers);
+              
+              // Propagar a atualização para o componente pai
+              if (onUserUpdated) {
+                onUserUpdated(updatedUser);
+              }
+              
               toast.success("Lista de usuários atualizada com sucesso!");
             }
           }}

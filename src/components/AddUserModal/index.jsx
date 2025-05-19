@@ -18,6 +18,7 @@ import {
   validateForm,
   handleApiError,
 } from "../../services/formUtils";
+import { countryNames } from "../../services/countries";
 
 export function AddUserModal({ onClose, onUserAdded }) {
   const [profilePic, setProfilePic] = useState(null);
@@ -138,7 +139,6 @@ export function AddUserModal({ onClose, onUserAdded }) {
         onClose();
       }, 1500);
     } catch (error) {
-      
       if (error.fieldErrors) {
         setErrors(prev => ({ ...prev, ...error.fieldErrors }));
         
@@ -278,14 +278,26 @@ export function AddUserModal({ onClose, onUserAdded }) {
 
           <div className="form-group">
             <label htmlFor="nationality">Nacionalidade</label>
-            <input
+            <select
               id="nationality"
-              type="text"
               name="nationality"
               value={formData.nationality}
               onChange={handleChange}
-              placeholder="País de origem"
-            />
+              className={errors.nationality ? "has-error" : ""}
+            >
+              <option value="">Selecione</option>
+              {countryNames.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
+            {errors.nationality && (
+              <div className="error-message">
+                <FaTimes size={12} />
+                {errors.nationality}
+              </div>
+            )}
           </div>
 
           <div className="form-group">

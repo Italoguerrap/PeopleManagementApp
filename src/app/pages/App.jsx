@@ -198,6 +198,17 @@ export function App() {
                   "Todos os usuários foram removidos!",
                   ToastType.SUCCESS,
                 );
+              }}              onUserUpdated={(updatedUser) => {
+                setUsers(prevUsers => 
+                  prevUsers.map(user => 
+                    user.cpf === updatedUser.cpf ? updatedUser : user
+                  )
+                );
+              }}
+              onUserDeleted={(deletedUserCpf) => {
+                setUsers(prevUsers => 
+                  prevUsers.filter(user => user.cpf !== deletedUserCpf)
+                );
               }}
             />
           ) : (

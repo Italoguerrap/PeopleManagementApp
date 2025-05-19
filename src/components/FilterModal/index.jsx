@@ -4,6 +4,7 @@ import { Button } from "../../components/button";
 import { searchPeople, GenderType } from "../../services/api";
 import { toast } from "react-toastify";
 import { formatCPF } from "../../services/validation";
+import { countryNames } from "../../services/countries";
 
 export function FilterModal({ onClose, onFilterApplied }) {
   const [formData, setFormData] = useState({
@@ -176,17 +177,21 @@ export function FilterModal({ onClose, onFilterApplied }) {
               onChange={handleChange}
               placeholder="Filtrar por naturalidade"
             />
-          </label>
-          <label>
+          </label>          <label>
             Nacionalidade:
             <br />
-            <input
-              type="text"
+            <select
               name="nationality"
               value={formData.nationality}
               onChange={handleChange}
-              placeholder="Filtrar por nacionalidade"
-            />
+            >
+              <option value="">Selecione</option>
+              {countryNames.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
           </label>
           <label>
             CPF:

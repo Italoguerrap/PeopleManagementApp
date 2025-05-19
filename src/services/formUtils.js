@@ -62,13 +62,23 @@ export function validateForm(formData) {
 }
 
 export function handleApiError(error, setErrors) {
-
+  
   if (error.fieldErrors) {
     setErrors((prev) => ({ ...prev, ...error.fieldErrors }));
     
     let priorityError = null;
     if (error.fieldErrors.cpf) {
       priorityError = error.fieldErrors.cpf;
+      // Adiciona um destaque visual de erro para o campo CPF
+      const cpfInput = document.getElementById('cpf');
+      if (cpfInput) {
+        cpfInput.classList.add('has-error');
+        // Aplica uma animação suave para chamar atenção
+        cpfInput.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+          cpfInput.style.animation = '';
+        }, 500);
+      }
     } else if (error.fieldErrors.email) {
       priorityError = error.fieldErrors.email;
     } else if (error.fieldErrors.name) {
@@ -83,7 +93,20 @@ export function handleApiError(error, setErrors) {
   } else if (error.global) {
     toast.error(error.global);
   } else if (error.message) {
-    toast.error(error.message);
+
+    if (error.message && error.message.toLowerCase().includes("cpf") && 
+        (error.message.includes("já cadastrado") || 
+         error.message.includes("já existe") ||
+         error.message.includes("pertence a outro") ||
+         error.message.includes("duplicate") ||
+         error.message.includes("já registrado") ||
+         error.message.includes("already exists"))) {
+      const cpfError = "CPF já cadastrado no sistema. Por favor, utilize outro CPF.";
+      setErrors((prev) => ({ ...prev, cpf: cpfError }));
+      toast.error(cpfError);
+    } else {
+      toast.error(error.message);
+    }
   } else {
     toast.error("Ocorreu um erro inesperado");
   }

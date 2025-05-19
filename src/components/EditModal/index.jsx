@@ -10,6 +10,7 @@ import {
   validateForm,
   handleApiError,
 } from "../../services/formUtils";
+import { countryNames } from "../../services/countries";
 
 export function EditModal({ user, onClose, onUserUpdated }) {
   const [name, setName] = useState(user?.name || "");
@@ -152,11 +153,21 @@ export function EditModal({ user, onClose, onUserUpdated }) {
       toast.success("Usuário atualizado com sucesso!");
 
       if (onUserUpdated) {
+        onUserUpdated(updatedUser);
         setTimeout(() => {
-          onUserUpdated(updatedUser);
-        }, 1500);
+          onClose();
+        }, 1000);
       }
     } catch (error) {
+      // Destaque visual para campo com erro de CPF
+      if (error.fieldErrors && error.fieldErrors.cpf) {
+        const cpfField = document.getElementById('cpf');
+        if (cpfField) {
+          cpfField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => cpfField.focus(), 500);
+        }
+      }
+      
       handleApiError(error, setErrors);
     } finally {
       setLoading(false);
@@ -292,15 +303,20 @@ export function EditModal({ user, onClose, onUserUpdated }) {
 
           <div className="form-group">
             <label htmlFor="nationality">Nacionalidade</label>
-            <input
+            <select
               id="nationality"
-              type="text"
               name="nationality"
               value={nationality}
               onChange={(e) => handleFieldChange("nationality", e.target.value)}
-              placeholder="País de origem"
               className={errors.nationality ? "has-error" : ""}
-            />
+            >
+              <option value="">Selecione</option>
+              {countryNames.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
             {errors.nationality && (
               <div className="error-message">
                 <FaTimes size={12} />
