@@ -33,6 +33,7 @@ export function AddUserModal({ onClose, onUserAdded }) {
     naturality: "",
     nationality: "",
     cpf: "",
+    password: "",
   });
 
   function handleChange(e) {
@@ -122,6 +123,7 @@ export function AddUserModal({ onClose, onUserAdded }) {
       naturality: formData.naturality || null,
       nationality: formData.nationality || null,
       cpf: formData.cpf || null,
+      password: formData.password,
     };
 
     try {
@@ -271,6 +273,18 @@ export function AddUserModal({ onClose, onUserAdded }) {
               value={formData.nationality}
               onChange={handleChange}
               placeholder="País de origem"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Senha</label>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Digite a senha"
             />
           </div>
 
