@@ -154,7 +154,6 @@ export function RegisterModal({ onClose, onRegistrationSuccess }) {
         onClose();
       }, 1500);
     } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
       handleApiError(error, setErrors);
     } finally {
       setLoading(false);

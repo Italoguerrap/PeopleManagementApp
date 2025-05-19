@@ -62,7 +62,6 @@ export function validateForm(formData) {
 }
 
 export function handleApiError(error, setErrors) {
-  console.error("API error:", error);
 
   if (error.fieldErrors) {
     setErrors((prev) => ({ ...prev, ...error.fieldErrors }));

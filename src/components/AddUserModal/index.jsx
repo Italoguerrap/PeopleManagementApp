@@ -138,7 +138,6 @@ export function AddUserModal({ onClose, onUserAdded }) {
         onClose();
       }, 1500);
     } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
       
       if (error.fieldErrors) {
         setErrors(prev => ({ ...prev, ...error.fieldErrors }));

@@ -57,7 +57,6 @@ export function App() {
       }
     } 
     catch (err) {
-      console.error("Error loading users:", err);
       setLoadError(true);
 
       if (users.length > 0 && err.message !== "Failed to fetch" && document.visibilityState === 'visible') {
@@ -88,7 +87,6 @@ export function App() {
       const data = await searchPeople({});
       setUsers(data);
     } catch (err) {
-      console.error("Error clearing filters:", err);
       setLoadError(true);
 
       if (err.message !== "Failed to fetch" && document.visibilityState === 'visible') {

@@ -132,7 +132,6 @@ export async function refreshToken() {
     
     return false;
   } catch (error) {
-    console.error("Error refreshing token:", error);
     return false;
   }
 }
@@ -157,7 +156,6 @@ export async function searchPeople(queryData = {}) {
         try {
           queryObj = JSON.parse(queryData);
         } catch (e) {
-          console.error("Error parsing query JSON:", e);
           if (queryData.trim()) {
             queryObj = { name: queryData.trim() };
           }
@@ -209,7 +207,6 @@ export async function searchPeople(queryData = {}) {
     }
     return safeParseJson(response, []);
   } catch (error) {
-    console.error("Error in searchPeople:", error);
     if (
       error.message.includes("Failed to fetch") ||
       error.name === "TypeError"
@@ -385,7 +382,6 @@ export async function deletePerson(cpf) {
     }
     return safeParseJson(response, {});
   } catch (error) {
-    console.error("Error in deletePerson:", error);
     if (
       error.message.includes("Failed to fetch") ||
       error.name === "TypeError"

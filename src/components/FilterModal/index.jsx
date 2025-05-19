@@ -106,9 +106,7 @@ export function FilterModal({ onClose, onFilterApplied }) {
           `${filteredResults.length} usuário${filteredResults.length !== 1 ? "s" : ""} encontrado${filteredResults.length !== 1 ? "s" : ""}`,
         );
       }      onClose();
-    } catch (error) {
-      console.error("Erro ao aplicar filtros:", error);
-      
+    } catch (error) {      
       if (error.message && error.message.includes("Gender must be")) {
         toast.error("Erro de validação: O gênero deve ser 'Male', 'Female', ou 'Other'");
       } else {

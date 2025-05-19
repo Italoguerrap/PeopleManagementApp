@@ -137,7 +137,6 @@ export function EditModal({ user, onClose, onUserUpdated }) {
       } else if (sex === GenderType.Female) {
         genderValue = "Female";
       }
-      console.table(cpf);
       const personData = {
         name,
         email,

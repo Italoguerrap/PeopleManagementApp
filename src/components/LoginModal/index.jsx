@@ -91,7 +91,6 @@ export function LoginModal({ onClose, onLoginSuccess }) {
         onLoginSuccess(result);
         onClose();
       }, 1500);    } catch (error) {
-      console.error("Erro ao fazer login:", error);
       
       if (error.fieldErrors && Object.keys(error.fieldErrors).length > 0) {
         setErrors(error.fieldErrors);

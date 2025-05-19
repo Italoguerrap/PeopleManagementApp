@@ -42,7 +42,6 @@ export const AuthProvider = ({ children }) => {
         toast.error("Sua sessão expirou. Por favor, faça login novamente.");
       }
     } catch (error) {
-      console.error("Error refreshing token:", error);
       handleLogout();
     } finally {
       setRefreshing(false);
