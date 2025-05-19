@@ -1,4 +1,3 @@
-// Breakpoints para responsividade
 const size = {
   mobileS: "320px",
   mobileM: "375px",
@@ -20,7 +19,7 @@ export const device = {
   desktopL: `(max-width: ${size.desktop})`,
 };
 
-// Função auxiliar para aplicar estilos responsivos
+
 export const applyResponsiveStyles = (component, styles) => {
   Object.keys(styles).forEach((breakpoint) => {
     if (device[breakpoint]) {

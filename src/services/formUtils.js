@@ -25,7 +25,9 @@ export function validateField(fieldName, value, isSubmit = false) {
       break;
 
     case "cpf":
-      if (validateCPF(value, isSubmit)) {
+      if (!value?.trim()) {
+        error = "CPF é obrigatório";
+      } else if (!validateCPF(value, isSubmit)) {
         error = "CPF inválido";
       }
       break;
@@ -64,9 +66,21 @@ export function handleApiError(error, setErrors) {
 
   if (error.fieldErrors) {
     setErrors((prev) => ({ ...prev, ...error.fieldErrors }));
-    // Exibe o primeiro erro no toast
-    const firstError = Object.values(error.fieldErrors)[0];
-    if (firstError) toast.error(firstError);
+    
+    let priorityError = null;
+    if (error.fieldErrors.cpf) {
+      priorityError = error.fieldErrors.cpf;
+    } else if (error.fieldErrors.email) {
+      priorityError = error.fieldErrors.email;
+    } else if (error.fieldErrors.name) {
+      priorityError = error.fieldErrors.name;
+    } else {
+      priorityError = Object.values(error.fieldErrors)[0];
+    }
+    
+    if (priorityError) {
+      toast.error(priorityError);
+    }
   } else if (error.global) {
     toast.error(error.global);
   } else if (error.message) {

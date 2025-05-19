@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ModalOverlay, ModalContent, ButtonContainer } from "./styles";
 import { Button } from "../../components/button";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { deletePerson } from "../../services/api";
 import { MdWarning } from "react-icons/md";
 import { FaTrash, FaTimes } from "react-icons/fa";
@@ -35,7 +35,6 @@ export function DeleteConfirmationModal({ user, onClose, onUserDeleted }) {
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
-        <ToastContainer />
         <h2>
           <MdWarning style={{ marginRight: "8px", verticalAlign: "middle" }} />
           Confirmar Exclusão

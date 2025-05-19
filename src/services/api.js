@@ -1,4 +1,6 @@
-const API_BASE_URL = "http://localhost:5097/api/v1/People";
+const API_BASE_URL = "http://localhost:5097/api/v1";
+const PEOPLE_ENDPOINT = `${API_BASE_URL}/People`;
+const AUTH_ENDPOINT = `${API_BASE_URL}/Auth`;
 
 async function safeParseJson(response, defaultValue = {}) {
   const contentType = response.headers.get("content-type");
@@ -7,6 +9,11 @@ async function safeParseJson(response, defaultValue = {}) {
     return text ? JSON.parse(text) : defaultValue;
   }
   return defaultValue;
+}
+
+function getAuthHeader() {
+  const token = localStorage.getItem("accessToken");
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 function parseBackendValidationError(errorText) {
@@ -36,23 +43,169 @@ export const GenderType = {
   Male: 2,
 };
 
-export async function searchPeople(query = "") {
+// Authentication functions
+export async function login(cpf, password) {
   try {
-    const params = new URLSearchParams();
-    if (query) {
-      params.append("query", query);
-    }
-    const response = await fetch(`${API_BASE_URL}?${params.toString()}`, {
-      method: "GET",
+    const response = await fetch(`${AUTH_ENDPOINT}`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
+      body: JSON.stringify({ cpf, password }),
       mode: "cors",
     });
+
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Error fetching people: ${errorText}`);
+      const { fieldErrors, global } = parseBackendValidationError(errorText);
+
+      if (Object.keys(fieldErrors).length > 0) {
+        throw { fieldErrors, global };
+      }
+
+      throw { global: global || "Credenciais inválidas" };
+    }
+    
+    return safeParseJson(response, {});
+  } catch (error) {
+    if (
+      error.message &&
+      (error.message.includes("Failed to fetch") || error.name === "TypeError")
+    ) {
+      throw {
+        global:
+          "Não foi possível conectar ao servidor. Verifique sua conexão de internet ou tente novamente mais tarde.",
+      };
+    }
+
+    throw error;
+  }
+}
+
+export function isAuthenticated() {
+  const token = localStorage.getItem("accessToken");
+  const expiration = localStorage.getItem("tokenExpiration");
+  
+  if (!token || !expiration) {
+    return false;
+  }
+  
+  // Check if token is expired
+  const expirationDate = new Date(expiration);
+  const now = new Date();
+  
+  return now < expirationDate;
+}
+
+export async function refreshToken() {
+  const token = localStorage.getItem("accessToken");
+  
+  if (!token) {
+    return false;
+  }
+  
+  try {
+    const response = await fetch(`${AUTH_ENDPOINT}/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ token }),
+      mode: "cors",
+    });
+    
+    if (!response.ok) {
+      // If refresh fails, log the user out
+      logout();
+      return false;
+    }
+    
+    const data = await safeParseJson(response, {});
+    
+    if (data.accessToken) {
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("tokenExpiration", data.expiration);
+      return true;
+    }
+    
+    return false;
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    return false;
+  }
+}
+
+export function logout() {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("userCpf");
+  localStorage.removeItem("tokenExpiration");
+}
+
+export async function searchPeople(queryData = {}) {
+  try {
+    const params = new URLSearchParams();
+    
+    let queryObj = {};
+    
+    if (queryData) {
+      if (typeof queryData === 'object' && queryData !== null) {
+        queryObj = queryData;
+      } 
+      else if (typeof queryData === 'string' && queryData.trim() !== '') {
+        try {
+          queryObj = JSON.parse(queryData);
+        } catch (e) {
+          console.error("Error parsing query JSON:", e);
+          if (queryData.trim()) {
+            queryObj = { name: queryData.trim() };
+          }
+        }
+      }
+    }
+    
+    Object.entries(queryObj).forEach(([key, value]) => {
+      if (value && value !== "") {
+        const paramName = key.charAt(0).toUpperCase() + key.slice(1);
+        params.append(paramName, value);
+      }
+    });
+    
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...getAuthHeader()
+    };
+    
+    const response = await fetch(`${PEOPLE_ENDPOINT}?${params.toString()}`, {
+      method: "GET",
+      headers,
+      mode: "cors",
+    });    if (!response.ok) {
+      const errorText = await response.text();
+      
+      try {
+        const errorObj = JSON.parse(errorText);
+        
+        if (errorObj.errors) {
+          const errorMessages = [];
+          for (const key in errorObj.errors) {
+            errorMessages.push(`${key}: ${errorObj.errors[key].join(', ')}`);
+          }
+          
+          if (errorMessages.length > 0) {
+            throw new Error(`Validation errors: ${errorMessages.join('; ')}`);
+          }
+        }
+        
+        throw new Error(`Error fetching people: ${errorObj.title || JSON.stringify(errorObj)}`);
+      } catch (e) {
+        if (e.message.includes('Validation errors')) {
+          throw e;
+        }
+        throw new Error(`Error fetching people: ${errorText}`);
+      }
     }
     return safeParseJson(response, []);
   } catch (error) {
@@ -73,12 +226,15 @@ export async function addPerson(personData) {
   if (!personData.name) throw { fieldErrors: { name: "Name is required" } };
   if (!personData.email) throw { fieldErrors: { email: "Email is required" } };
   try {
-    const response = await fetch(API_BASE_URL, {
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...getAuthHeader()
+    };
+    
+    const response = await fetch(PEOPLE_ENDPOINT, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+      headers,
       body: JSON.stringify(personData),
       mode: "cors",
     });
@@ -88,9 +244,7 @@ export async function addPerson(personData) {
 
       if (Object.keys(fieldErrors).length > 0) {
         throw { fieldErrors, global };
-      }
-
-      if (errorText.includes("FluentValidation.ValidationException")) {
+      }      if (errorText.includes("FluentValidation.ValidationException")) {
         if (errorText.includes("Nome deve conter apenas letras")) {
           throw {
             fieldErrors: {
@@ -104,6 +258,14 @@ export async function addPerson(personData) {
             },
           };
         }
+      }
+      
+      if (errorText.includes("Este CPF já está cadastrado")) {
+        throw {
+          fieldErrors: {
+            cpf: "CPF já cadastrado no sistema. Por favor, utilize outro CPF.",
+          },
+        };
       }
 
       throw { global: `Erro ao adicionar usuário: ${errorText}` };
@@ -129,12 +291,15 @@ export async function updatePerson(cpf, personData) {
   if (!personData.name) throw { fieldErrors: { name: "Name is required" } };
   if (!personData.email) throw { fieldErrors: { email: "Email is required" } };
   try {
-    const response = await fetch(`${API_BASE_URL}/${cpf}`, {
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...getAuthHeader()
+    };
+    
+    const response = await fetch(`${PEOPLE_ENDPOINT}/${cpf}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+      headers,
       body: JSON.stringify(personData),
       mode: "cors",
     });
@@ -194,12 +359,15 @@ export async function deletePerson(cpf) {
   if (!cpf) throw new Error("CPF is required");
 
   try {
-    const response = await fetch(`${API_BASE_URL}/${cpf}`, {
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...getAuthHeader()
+    };
+    
+    const response = await fetch(`${PEOPLE_ENDPOINT}/${cpf}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+      headers,
       mode: "cors",
     });
     if (!response.ok) {

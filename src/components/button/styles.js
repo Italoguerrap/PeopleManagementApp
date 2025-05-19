@@ -32,10 +32,10 @@ export const Container = styled.button`
   justify-content: center;
   gap: 0.5rem;
   cursor: pointer;
-  white-space: nowrap; /* Impede que o texto quebre em múltiplas linhas */
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 44px; /* Garantir área de toque mínima */
+  min-height: 44px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   animation: ${(props) => (props.$primary ? pulse : "none")} 2s infinite;
@@ -47,7 +47,7 @@ export const Container = styled.button`
   }
 
   @media ${device.mobileL} {
-    height: 44px; /* Mantenha 44px para melhor área de toque em dispositivos móveis */
+    height: 44px;
     padding: 0 1rem;
     font-size: 0.85rem;
     gap: 0.3rem;
@@ -86,7 +86,6 @@ export const Container = styled.button`
     box-shadow: none;
   }
 
-  /* Para dispositivos com tela sensível ao toque */
   @media (hover: none) {
     &:hover {
       transform: none;

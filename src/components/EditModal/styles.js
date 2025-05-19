@@ -211,27 +211,6 @@ export const ModalContent = styled.div`
   }
 `;
 
-export const Photo = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 1rem 0;
-
-  img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid #0088ff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-
-    &:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    }
-  }
-`;
-
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;

@@ -10,18 +10,16 @@ import {
 import { Button } from "../../components/button";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { addPerson, GenderType } from "../../services/api";
 import { FaUserPlus, FaSave, FaTimes } from "react-icons/fa";
 import { formatCPF } from "../../services/validation";
+import { addPerson } from "../../services/api";
 import {
   validateField,
   validateForm,
   handleApiError,
 } from "../../services/formUtils";
 
-export function AddUserModal({ onClose, onUserAdded }) {
-  const [profilePic, setProfilePic] = useState(null);
-  const [preview, setPreview] = useState(null);
+export function RegisterModal({ onClose, onRegistrationSuccess }) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -56,11 +54,20 @@ export function AddUserModal({ onClose, onUserAdded }) {
       });
     }
   }
-
   function validateFormData() {
-    const { errors: validationErrors, isValid } = validateForm(formData);
+    const validationResult = validateForm(formData);
+    let isFormValid = validationResult.isValid;
+    const validationErrors = validationResult.errors;
 
-    if (!isValid) {
+    if (!formData.password) {
+      validationErrors.password = "Senha é obrigatória";
+      isFormValid = false;
+    } else if (formData.password.length < 6) {
+      validationErrors.password = "A senha deve ter pelo menos 6 caracteres";
+      isFormValid = false;
+    }
+
+    if (!isFormValid) {
       setErrors(validationErrors);
       const firstError = Object.values(validationErrors)[0];
       if (firstError) {
@@ -68,7 +75,7 @@ export function AddUserModal({ onClose, onUserAdded }) {
       }
     }
 
-    return isValid;
+    return isFormValid;
   }
 
   function handleFieldChange(fieldName, value, isSubmit = false) {
@@ -81,7 +88,7 @@ export function AddUserModal({ onClose, onUserAdded }) {
       setErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[fieldName];
-        return false;
+        return newErrors;
       });
     }
   }
@@ -92,6 +99,15 @@ export function AddUserModal({ onClose, onUserAdded }) {
     const cpfValido = handleFieldChange("cpf", formData.cpf, true);
     const emailValido = handleFieldChange("email", formData.email, true);
     const nomeValido = handleFieldChange("name", formData.name, true);
+    
+    let passwordValido = false;
+    if (!formData.password) {
+      setErrors(prev => ({ ...prev, password: "Senha é obrigatória" }));
+      passwordValido = true;
+    } else if (formData.password.length < 6) {
+      setErrors(prev => ({ ...prev, password: "A senha deve ter pelo menos 6 caracteres" }));
+      passwordValido = true;
+    }
 
     let gender;
 
@@ -107,13 +123,11 @@ export function AddUserModal({ onClose, onUserAdded }) {
         break;
     }
 
-    if (cpfValido || emailValido || nomeValido) return;
+    if (cpfValido || emailValido || nomeValido || passwordValido) return;
 
     if (!validateFormData()) {
       return;
     }
-
-    const cleanCpf = formData.cpf ? formData.cpf.replace(/\D/g, '') : null;
     
     const payload = {
       name: formData.name,
@@ -124,61 +138,42 @@ export function AddUserModal({ onClose, onUserAdded }) {
         : null,
       naturality: formData.naturality || null,
       nationality: formData.nationality || null,
-      cpf: cleanCpf,
+      cpf: formData.cpf || null,
       password: formData.password,
     };
 
     try {
       setLoading(true);
       const result = await addPerson(payload);
-      toast.success("Usuário adicionado com sucesso!");
+      toast.success("Cadastro realizado com sucesso! Você já pode fazer login.");
 
       setTimeout(() => {
-        onUserAdded();
+        if (onRegistrationSuccess) {
+          onRegistrationSuccess(result);
+        }
         onClose();
       }, 1500);
     } catch (error) {
       console.error("Erro ao cadastrar usuário:", error);
-      
-      if (error.fieldErrors) {
-        setErrors(prev => ({ ...prev, ...error.fieldErrors }));
-        
-        if (error.fieldErrors.cpf) {
-          const cpfField = document.getElementById('cpf');
-          if (cpfField) {
-            cpfField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => cpfField.focus(), 500);
-          }
-        }
-      }
-      
       handleApiError(error, setErrors);
     } finally {
       setLoading(false);
     }
   }
 
-  function handleFileChange(event) {
-    const file = event.target.files[0];
-    if (file) {
-      setProfilePic(file);
-      setPreview(URL.createObjectURL(file));
-    }
-  }
   return (
     <ModalOverlay onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
-        {loading && (
+      <ModalContent onClick={(e) => e.stopPropagation()}>        {loading && (
           <LoadingOverlay>
             <LoadingSpinner />
-            <LoadingText>Adicionando usuário...</LoadingText>
+            <LoadingText>Cadastrando...</LoadingText>
           </LoadingOverlay>
         )}
         <h2>
           <FaUserPlus
             style={{ marginRight: "10px", verticalAlign: "middle" }}
           />
-          Adicionar Usuário
+          Cadastrar Novo Usuário
         </h2>
 
         <form onSubmit={handleSubmit}>
@@ -241,6 +236,25 @@ export function AddUserModal({ onClose, onUserAdded }) {
           </div>
 
           <div className="form-group">
+            <label htmlFor="password">Senha</label>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Digite uma senha segura"
+              className={errors.password ? "has-error" : ""}
+            />
+            {errors.password && (
+              <div className="error-message">
+                <FaTimes size={12} />
+                {errors.password}
+              </div>
+            )}
+          </div>
+
+          <div className="form-group">
             <label htmlFor="gender">Sexo</label>
             <select
               id="gender"
@@ -289,18 +303,6 @@ export function AddUserModal({ onClose, onUserAdded }) {
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Senha</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Digite a senha"
-            />
-          </div>
-
           <ButtonContainer>
             <Button
               type="button"
@@ -312,9 +314,9 @@ export function AddUserModal({ onClose, onUserAdded }) {
             />{" "}
             <Button
               type="submit"
-              title={loading ? "Adicionando..." : "Adicionar Usuário"}
+              title={loading ? "Cadastrando..." : "Cadastrar"}
               icon={<FaSave />}
-              colorButton="#02ffff"
+              colorButton="#4CAF50"
               loading={loading}
               disabled={loading}
             />

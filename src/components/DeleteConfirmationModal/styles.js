@@ -161,7 +161,7 @@ export const ButtonContainer = styled.div`
 
   @media ${device.mobileL} {
     margin-top: 1.2rem;
-    flex-direction: column-reverse; /* Cancel button at bottom */
+    flex-direction: column-reverse;
     gap: 15px;
   }
 

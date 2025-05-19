@@ -10,6 +10,18 @@ export const Container = styled.div`
   background-color: #fafafa;
   min-height: 100vh;
 
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    
+    @media ${device.tablet} {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+
   @media ${device.tablet} {
     padding: 1rem;
   }
@@ -19,6 +31,47 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+`;
+
+export const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background-color: var(--card-background-color, #ffffff);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  
+  span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color, #333333);
+  }
+  
+  @media ${device.mobileL} {
+    padding: 6px 10px;
+    
+    span {
+      font-size: 12px;
+    }
+  }
+`;
+
+export const LogoutButton = styled.button`
+  background: none;
+  border: none;
+  color: #ff3333;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+  
+  &:hover {
+    background-color: rgba(255, 51, 51, 0.1);
   }
 `;
 

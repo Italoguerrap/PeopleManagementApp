@@ -1,13 +1,8 @@
-// Este arquivo contém instruções de responsividade para tabelas
-// Pode ser usado para modificar o comportamento de tabelas em dispositivos móveis
-
 import { css } from "styled-components";
 import { device } from "./responsive";
 
-// Estilos para tornar tabelas mais responsivas em dispositivos móveis
 export const responsiveTableStyles = css`
   @media ${device.mobileL} {
-    /* Estes estilos podem ser aplicados a qualquer tabela com a classe 'responsive-table' */
     .responsive-table {
       display: block;
       width: 100%;
@@ -16,7 +11,6 @@ export const responsiveTableStyles = css`
       -ms-overflow-style: -ms-autohiding-scrollbar; /* Para IE11 */
     }
 
-    /* Indicador de rolagem horizontal */
     .table-scroll-indicator {
       display: block;
       text-align: center;
@@ -41,10 +35,8 @@ export const responsiveTableStyles = css`
   }
 `;
 
-// Função para transformar tabelas em formato de cards para exibição móvel
 export const tableToCards = css`
   @media ${device.mobileL} {
-    /* Aplicar apenas a tabelas com a classe 'table-to-cards' */
     .table-to-cards {
       thead {
         display: none;
@@ -90,14 +82,12 @@ export const tableToCards = css`
           padding-right: 10px;
         }
 
-        /* Melhorar legibilidade dos valores */
         &[data-value] {
           font-weight: 500;
           color: #333;
         }
       }
 
-      /* Melhorar espaçamento de botões em versão de cartão */
       .action-buttons {
         display: flex;
         justify-content: flex-end;
@@ -108,10 +98,8 @@ export const tableToCards = css`
   }
 `;
 
-// Estilos para manter a tabela horizontal, mas com colunas responsivas
 export const horizontalResponsiveTable = css`
   @media ${device.tablet} {
-    /* Para tabelas com a classe 'responsive-columns' */
     .responsive-columns {
       th,
       td {
@@ -133,11 +121,9 @@ export const horizontalResponsiveTable = css`
 
       th,
       td {
-        /* Reduz padding para economizar espaço */
         padding: 8px 6px;
         font-size: 0.9rem;
 
-        /* Truncar texto muito longo */
         max-width: 150px;
         white-space: nowrap;
         overflow: hidden;
@@ -147,7 +133,6 @@ export const horizontalResponsiveTable = css`
   }
 `;
 
-// Estilos para melhorar a visualização de dados numéricos
 export const responsiveNumericData = css`
   @media ${device.mobileL} {
     .numeric-data {

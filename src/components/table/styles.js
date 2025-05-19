@@ -32,7 +32,7 @@ export const Container = styled.div`
 
   @media ${device.mobileL} {
     padding: 0.25rem;
-    -webkit-overflow-scrolling: touch; /* Improve scroll on iOS */
+    -webkit-overflow-scrolling: touch; 
   }
 `;
 
@@ -220,14 +220,6 @@ export const StatusBadge = styled.span`
   @media ${device.mobileL} {
     gap: 1.2rem;
   }
-`;
-
-export const Photo = styled(FaCircleUser)`
-  font-size: 1.8rem;
-  color: #0088ff;
-  margin-right: 0.8rem;
-  vertical-align: middle;
-  filter: drop-shadow(0 2px 4px rgba(0, 136, 255, 0.3));
 `;
 
 export const PaginationFooter = styled.div`

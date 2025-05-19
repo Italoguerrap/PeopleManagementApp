@@ -88,6 +88,7 @@ export const ModalContent = styled.div`
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   animation: ${slideUp} 0.3s ease;
   position: relative;
+  opacity: 1;
   overflow-y: auto;
 
   @media ${device.tablet} {
@@ -271,41 +272,6 @@ export const ModalContent = styled.div`
   }
 `;
 
-export const Photo = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 1rem 0;
-
-  @media ${device.mobileL} {
-    margin: 0.5rem 0;
-  }
-
-  img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid #0088ff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-
-    @media ${device.tablet} {
-      width: 100px;
-      height: 100px;
-    }
-
-    @media ${device.mobileL} {
-      width: 80px;
-      height: 80px;
-    }
-
-    &:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    }
-  }
-`;
-
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -322,7 +288,7 @@ export const ButtonContainer = styled.div`
   }
 
   @media ${device.mobileL} {
-    flex-direction: column-reverse; /* Cancel button at bottom, submit at top */
+    flex-direction: column-reverse;
     gap: 12px;
     margin-top: 1rem;
 

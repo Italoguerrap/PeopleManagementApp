@@ -10,6 +10,8 @@ export const ToastType = {
 };
 
 export function showToast(message, type = ToastType.INFO) {
+  if (!message) return;
+  
   const options = {
     position: "top-right",
     autoClose: 3000,
@@ -18,7 +20,6 @@ export function showToast(message, type = ToastType.INFO) {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    transition: toast.Slide,
     theme: "colored",
   };
 
@@ -27,7 +28,7 @@ export function showToast(message, type = ToastType.INFO) {
       toast.success(message, options);
       break;
     case ToastType.ERROR:
-      toast.error(message, { ...options, autoClose: 5000 }); // Error messages stay longer
+      toast.error(message, { ...options, autoClose: 5000 }); 
       break;
     case ToastType.WARNING:
       toast.warning(message, options);
@@ -52,7 +53,6 @@ export function ToastManager() {
       draggable
       pauseOnHover
       theme="colored"
-      transition={toast.Slide}
     />
   );
 }

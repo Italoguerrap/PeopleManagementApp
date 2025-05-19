@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ModalOverlay, ModalContent, ButtonContainer } from "./styles";
 import { Button } from "../../components/button";
 import { searchPeople, GenderType } from "../../services/api";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { formatCPF } from "../../services/validation";
 
 export function FilterModal({ onClose, onFilterApplied }) {
@@ -24,17 +24,43 @@ export function FilterModal({ onClose, onFilterApplied }) {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-  }
-
-  async function handleSubmit(e) {
+  }  async function handleSubmit(e) {
     e.preventDefault();
 
     try {
       setLoading(true);
+      
+      const queryData = { ...formData };
+      
+      Object.keys(queryData).forEach(key => {
+        if (queryData[key] === "" || queryData[key] === null || queryData[key] === undefined) {
+          delete queryData[key];
+        }
+      });
+      
+      if (queryData.gender) {
+        switch(queryData.gender) {
+          case "Masculino":
+            queryData.gender = "Male";
+            break;
+          case "Feminino":
+            queryData.gender = "Female";
+            break;
+          default:
+            queryData.gender = "Other";
+        }
+      }
+      
+      if (queryData.cpf) {
+        queryData.cpf = queryData.cpf.replace(/\D/g, '');
+      }
+      
+      if (queryData.dateOfBirth) {
+        queryData.dateOfBirth = queryData.dateOfBirth;
+      }
 
-      const query = JSON.stringify(formData);
-
-      const results = await searchPeople(query);
+  
+      const results = await searchPeople(queryData);
 
       let filteredResults = [...results];
 
@@ -43,20 +69,29 @@ export function FilterModal({ onClose, onFilterApplied }) {
           user.email?.toLowerCase().includes(formData.email.toLowerCase()),
         );
       }
-
       if (formData.gender) {
-        const genderValue = GenderType[formData.gender];
 
-        if (genderValue !== null) {
+        let genderValue;
+        switch(formData.gender) {
+          case "Masculino":
+            genderValue = GenderType.Male;
+            break;
+          case "Feminino":
+            genderValue = GenderType.Female;
+            break;
+          default:
+            genderValue = GenderType.Other;
+        }
+
+        if (genderValue !== undefined && genderValue !== null) {
           filteredResults = filteredResults.filter(
             (user) => user.gender === genderValue,
           );
         }
-      }
-
-      if (formData.cpf) {
+      }if (formData.cpf) {
+        const formattedCpf = formData.cpf.replace(/\D/g, '');
         filteredResults = filteredResults.filter((user) =>
-          user.cpf?.includes(formData.cpf),
+          user.cpf?.replace(/\D/g, '').includes(formattedCpf),
         );
       }
 
@@ -70,10 +105,15 @@ export function FilterModal({ onClose, onFilterApplied }) {
         toast.success(
           `${filteredResults.length} usuário${filteredResults.length !== 1 ? "s" : ""} encontrado${filteredResults.length !== 1 ? "s" : ""}`,
         );
-      }
-      onClose();
+      }      onClose();
     } catch (error) {
-      toast.error("Erro ao aplicar filtros: " + error.message);
+      console.error("Erro ao aplicar filtros:", error);
+      
+      if (error.message && error.message.includes("Gender must be")) {
+        toast.error("Erro de validação: O gênero deve ser 'Male', 'Female', ou 'Other'");
+      } else {
+        toast.error("Erro ao aplicar filtros: " + error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -83,7 +123,6 @@ export function FilterModal({ onClose, onFilterApplied }) {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         {" "}
         <h2>Filtros</h2>
-        <ToastContainer />
         <form onSubmit={handleSubmit}>
           <label>
             Nome: <br />

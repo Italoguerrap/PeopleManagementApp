@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { ModalOverlay, ModalContent, Photo, ButtonContainer } from "./styles";
+import { ModalOverlay, ModalContent, ButtonContainer } from "./styles";
 import { Button } from "../../components/button";
 import { updatePerson, GenderType } from "../../services/api";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { FaUserEdit, FaSave, FaTimes } from "react-icons/fa";
 import { formatCPF } from "../../services/validation";
 import {
@@ -173,7 +173,6 @@ export function EditModal({ user, onClose, onUserUpdated }) {
           />
           Editar Usuário
         </h2>
-        <ToastContainer />
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -310,22 +309,6 @@ export function EditModal({ user, onClose, onUserUpdated }) {
               </div>
             )}
           </div>
-
-          <div className="form-group">
-            <label htmlFor="profilePic">Foto de Perfil</label>
-            <input
-              id="profilePic"
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
-          </div>
-
-          {preview && (
-            <Photo>
-              <img src={preview} alt="Prévia da foto de perfil" />
-            </Photo>
-          )}
 
           <ButtonContainer>
             <Button

@@ -9,7 +9,6 @@ import {
   Th,
   Td,
   StatusBadge,
-  Photo,
   PaginationButton,
 } from "./styles";
 import { IoClose } from "react-icons/io5";
@@ -24,7 +23,7 @@ import { DeleteConfirmationModal } from "../../components/DeleteConfirmationModa
 import { useState, useEffect } from "react";
 import { TfiLayoutLineSolid } from "react-icons/tfi";
 import { deletePerson, getGenderText } from "../../services/api";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import SwipeableTable from "../SwipeableTable";
 
 export function Table({ users, onLastUserDeleted }) {
@@ -81,7 +80,6 @@ export function Table({ users, onLastUserDeleted }) {
 
   return (
     <Container>
-      <ToastContainer />
       <SwipeableTable>
         <TableContainer className="responsive-table responsive-columns">
           <Thead>
@@ -100,7 +98,6 @@ export function Table({ users, onLastUserDeleted }) {
             {currentUsers.map((user, index) => (
               <Tr key={user.cpf} $index={index}>
                 <Td data-label="Nome">
-                  <Photo />
                   {user.name}
                 </Td>
                 <Td data-label="Email">
@@ -112,7 +109,7 @@ export function Table({ users, onLastUserDeleted }) {
                   ) : (
                     getGenderText(user.gender) || <TfiLayoutLineSolid />
                   )}
-                </Td>{" "}
+                </Td>
                 <Td className="priority-medium" data-label="Data de Nascimento">
                   {user.dateOfBirth ? (
                     new Date(user.dateOfBirth).toLocaleDateString("pt-BR")

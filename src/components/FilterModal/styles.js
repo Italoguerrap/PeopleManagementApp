@@ -138,7 +138,7 @@ export const ModalContent = styled.div`
     @media ${device.mobileL} {
       width: 100%;
       padding: 0.7rem;
-      font-size: 16px; /* Prevents zooming on iOS */
+      font-size: 16px; 
       border-radius: 8px;
     }
 
@@ -173,7 +173,7 @@ export const ModalContent = styled.div`
 
     @media ${device.mobileL} {
       padding: 0.7rem;
-      font-size: 16px; /* Prevents zooming on iOS */
+      font-size: 16px;
     }
 
     &:focus {
@@ -205,7 +205,7 @@ export const ButtonContainer = styled.div`
   }
 
   @media ${device.mobileL} {
-    flex-direction: column-reverse; /* Action buttons on top for better UX */
+    flex-direction: column-reverse;
     gap: 15px;
     margin-top: 1rem;
 

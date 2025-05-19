@@ -9,13 +9,15 @@ export function validateName(name) {
 }
 
 export function validateCPF(cpf, isSubmit = false) {
-  if (cpf === null || cpf === undefined || cpf === "") return true;
+  if (!isSubmit && (cpf === null || cpf === undefined || cpf === "")) return true;
+  
+  if (isSubmit && (cpf === null || cpf === undefined || cpf === "")) return false;
 
   cpf = cpf.replace(/\D/g, "");
 
-  if (cpf.length !== 11) return true;
+  if (cpf.length !== 11) return false;
 
-  if (/^(\d)\1+$/.test(cpf)) return true;
+  if (/^(\d)\1+$/.test(cpf)) return false;
 
   let soma = 0;
   for (let i = 0; i < 9; i++) {
@@ -29,10 +31,9 @@ export function validateCPF(cpf, isSubmit = false) {
     soma += parseInt(cpf.charAt(i)) * (11 - i);
   }
   resto = 11 - (soma % 11);
-
   let dv2 = resto > 9 ? 0 : resto;
 
-  return !(parseInt(cpf.charAt(9)) === dv1 && parseInt(cpf.charAt(10)) === dv2);
+  return (parseInt(cpf.charAt(9)) === dv1 && parseInt(cpf.charAt(10)) === dv2);
 }
 
 export function formatCPF(value) {

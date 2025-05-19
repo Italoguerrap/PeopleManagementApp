@@ -1,7 +1,6 @@
-/* Estilos globais para responsividade */
 html {
   box-sizing: border-box;
-  touch-action: manipulation; /* Improved touch handling */
+  touch-action: manipulation;
 }
 
 *, *:before, *:after {
@@ -18,7 +17,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Estilos para melhorar clicabilidade em dispositivos móveis */
 button, 
 a, 
 [role="button"],
@@ -31,7 +29,7 @@ input[type="submit"] {
 input, 
 select, 
 textarea {
-  font-size: 16px; /* Evita zoom em iOS */
+  font-size: 16px;
 }
 
 img {
@@ -39,7 +37,6 @@ img {
   height: auto;
 }
 
-/* Media queries para responsividade */
 @media screen and (max-width: 1024px) {
   html {
     font-size: 16px;
@@ -57,7 +54,6 @@ img {
     font-size: 14px;
   }
   
-  /* Ajuste para melhorar interface em telas pequenas */
   .btn-full-mobile {
     width: 100% !important;
     margin-left: 0 !important;
@@ -71,7 +67,6 @@ img {
   }
 }
 
-/* Utilitários para acessibilidade */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -84,7 +79,6 @@ img {
   border-width: 0;
 }
 
-/* Classes utilitárias para responsividade */
 .mobile-only {
   display: none;
 }
@@ -99,14 +93,12 @@ img {
   }
 }
 
-/* Ajuste para telas muito pequenas */
 @media screen and (max-width: 320px) {
   .mobile-hide {
     display: none !important;
   }
 }
 
-/* Estilos para melhorar acessibilidade em telas sensíveis ao toque */
 @media (hover: none) {
   a:hover,
   button:hover {
@@ -116,7 +108,6 @@ img {
   }
 }
 
-/* Melhoria de contraste para telas com alto brilho */
 @media (prefers-contrast: high) {
   body {
     background-color: white;
