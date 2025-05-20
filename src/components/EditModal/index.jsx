@@ -132,16 +132,24 @@ export function EditModal({ user, onClose, onUserUpdated }) {
     try {
       setLoading(true);
 
-      let genderValue = "Other";
-      if (sex === GenderType.Male) {
-        genderValue = "Male";
-      } else if (sex === GenderType.Female) {
-        genderValue = "Female";
+      let gender;
+
+      switch (sex) {
+        case "Masculino":
+          gender = "Male";
+          break;
+        case "Feminino":
+          gender = "Female";
+          break;
+        default:
+          gender = "Other";
+          break;
       }
+      
       const personData = {
         name,
         email,
-        gender: genderValue,
+        gender: gender,
         dateOfBirth: birthDate
           ? new Date(birthDate).toISOString().split("T")[0]
           : null,

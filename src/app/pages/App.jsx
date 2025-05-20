@@ -227,11 +227,12 @@ export function App() {
             setIsFiltered(true);
           }}
         />
-      )}
-      {isAddUserModalOpen && (
+      )}      {isAddUserModalOpen && (
         <AddUserModal
           onClose={() => setIsAddUserModalOpen(false)}
-          onUserAdded={getUsers}
+          onUserAdded={() => {
+            getUsers();
+          }}
         />
       )}
     </Container>

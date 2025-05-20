@@ -133,11 +133,10 @@ export function AddUserModal({ onClose, onUserAdded }) {
       setLoading(true);
       const result = await addPerson(payload);
       toast.success("Usuário adicionado com sucesso!");
+      
+      onUserAdded();
+      onClose();
 
-      setTimeout(() => {
-        onUserAdded();
-        onClose();
-      }, 1500);
     } catch (error) {
       if (error.fieldErrors) {
         setErrors(prev => ({ ...prev, ...error.fieldErrors }));
