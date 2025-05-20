@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:5097/api/v1";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const PEOPLE_ENDPOINT = `${API_BASE_URL}/People`;
 const AUTH_ENDPOINT = `${API_BASE_URL}/Auth`;
 
@@ -254,7 +254,7 @@ export async function addPerson(personData) {
       body: JSON.stringify(personData),
       mode: "cors",
     });
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       const { fieldErrors, global } = parseBackendValidationError(errorText);
